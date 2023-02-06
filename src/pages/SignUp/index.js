@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,13 +13,12 @@ import GoogleIcon from "@mui/icons-material/Google";
 
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../services/firebaseConfig";
+
 import loginIcon from "../../assets/icon.png";
 
 const theme = createTheme();
 
-provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
-
-const Login = () => {
+const SignUp = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -47,41 +47,65 @@ const Login = () => {
             draggable="false"
           />
           <Typography component="h1" variant="h5" sx={{ mt: 5 }}>
-            Login
+            Cadastre-se
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
             noValidate
-            sx={{ mt: 1 }}
+            onSubmit={handleSubmit}
+            sx={{ mt: 3 }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Senha"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="Nome"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Sobrenome"
+                  name="lastName"
+                  autoComplete="family-name"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Senha"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+            </Grid>
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Entrar
+              Cadastrar
             </Button>
             <Button
               variant="outlined"
@@ -92,19 +116,18 @@ const Login = () => {
             >
               Entrar com o Google
             </Button>
-            <Grid container>
+            <Grid container justifyContent="flex-end">
               <Grid item xs>
-                <Link href="/signup" variant="body2">
-                  Não tem uma conta? Cadastre-se!
+                <Link href="/login" variant="body2">
+                  Já possui uma conta? Entre!
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
       </Container>
     </ThemeProvider>
   );
 };
 
-export default Login;
+export default SignUp;
