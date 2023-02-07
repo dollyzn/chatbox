@@ -1,0 +1,35 @@
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { auth } from "../../config/firebase";
+import { signOut } from "firebase/auth";
+import Button from "@mui/material/Button";
+import * as React from "react";
+import { ChatBox } from "../../components/ChatBox";
+import { Container } from "@mui/system";
+
+const theme = createTheme();
+
+const Home = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <ChatBox />
+      </Container>
+    </ThemeProvider>
+  );
+};
+
+const SignOut = () => {
+  return (
+    auth.currentUser && (
+      <Button
+        variant="contained"
+        className="SignOutButton"
+        onClick={() => signOut(auth)}
+      >
+        Sair
+      </Button>
+    )
+  );
+};
+
+export default Home;

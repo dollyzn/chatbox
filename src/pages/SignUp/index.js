@@ -12,7 +12,7 @@ import Container from "@mui/material/Container";
 import GoogleIcon from "@mui/icons-material/Google";
 
 import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../../services/firebaseConfig";
+import { auth, provider } from "../../config/firebase";
 
 import loginIcon from "../../assets/icon.png";
 
