@@ -1,30 +1,29 @@
-import { useAuthState } from "react-firebase-hooks/auth";
 import { Fragment } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { auth } from "../config/firebase";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 import Home from "../pages/Home/index.js";
+import { PrivateRoute } from "./privateRoutes";
 
-const Private = ({ Item }) => {
-  const [user] = useAuthState(auth);
+// const Private = ({ Item }) => {
+//   const [user] = useAuthState(auth);
 
-  return user ? <Item /> : <Login />;
-};
+//   return user ? <Item /> : <Login />;
+// };
 
 const AppRoutes = () => {
   return (
-    <BrowserRouter>
+    <Router>
       <Fragment>
         <Routes>
-          <Route exact path="/home" element={<Private Item={Home} />} />
-          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<PrivateRoute />} />
+          <Route path="/login" element={<Login />} />
           <Route exact path="/signup" element={<SignUp />} />
           <Route path="*" element={<Login />} />
         </Routes>
       </Fragment>
-    </BrowserRouter>
+    </Router>
   );
 };
 

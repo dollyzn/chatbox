@@ -15,13 +15,17 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../config/firebase";
 
 import loginIcon from "../../assets/icon.png";
+import { AuthContext } from "../../context";
 
 const theme = createTheme();
 
 const SignUp = () => {
+  const { SignUp } = React.useContext(AuthContext);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    SignUp(data.get("email"), data.get("password"));
     console.log({
       email: data.get("email"),
       password: data.get("password"),
