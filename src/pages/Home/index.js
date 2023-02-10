@@ -1,30 +1,35 @@
 import { useContext, useState } from "react";
+import { AuthContext } from "../../context";
+
+import {
+  MenuItem,
+  Menu,
+  Paper,
+  Grid,
+  Container,
+  Badge,
+  IconButton,
+  Divider,
+  Typography,
+  List,
+  Toolbar,
+  Box,
+  CssBaseline,
+} from "@mui/material";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
+import { mainListItems, secondaryListItems } from "../../components/ListItems";
 import MuiDrawer from "@mui/material/Drawer";
-import Box from "@mui/material/Box";
 import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Badge from "@mui/material/Badge";
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { MenuItem, Menu } from "@mui/material";
-import { mainListItems, secondaryListItems } from "../../components/ListItems";
+import Icon from "../../assets/dash.png";
+
 import Chart from "../../components/Chart";
 import Deposits from "../../components/Deposits";
 import Orders from "../../components/Orders";
-
-import Icon from "../../assets/dash.png";
-import { AuthContext } from "../../context";
 
 const drawerWidth = 240;
 
@@ -157,7 +162,7 @@ function DashboardContent() {
               open={menuOpen}
               onClose={handleCloseMenu}
             >
-              <MenuItem onClick={SignOut}>{"Logout"}</MenuItem>
+              <MenuItem onClick={SignOut}>{"Sair"}</MenuItem>
             </Menu>
           </Toolbar>
         </AppBar>

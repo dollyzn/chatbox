@@ -1,25 +1,25 @@
-// import { useAuthState } from "react-firebase-hooks/auth";
+import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { auth } from "../config/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  signInWithPopup,
 } from "firebase/auth";
-import { createContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // const fbuser = useAuthState(auth);
   const [signed, setSigned] = useState(null);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const firebaseUser = localStorage.getItem("Auth:user");
-    console.log(localStorage.getItem("Auth:user"));
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
     const loadingStoreData = async () => {
-      if (firebaseUser) {
-        setUser(firebaseUser);
+      if (token) {
+        setUser(user);
         setSigned(true);
       }
     };
@@ -29,42 +29,135 @@ export const AuthProvider = ({ children }) => {
   const Login = async (email, password) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
         setUser(user);
         setSigned(true);
-        localStorage.setItem("Auth:user", user.accessToken);
-        // ...
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", user.accessToken);
+        toast.success("Usuário autenticado com sucesso!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       })
       .catch((error) => {
         const errorMessage = error.message;
-        alert(errorMessage);
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       });
   };
 
   const SignUp = async (email, password) => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
         const user = userCredential.user;
         setUser(user);
         setSigned(true);
-        localStorage.setItem("Auth:user", user.accessToken);
-        console.log("va te fude");
-        // ...
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", user.accessToken);
+        toast.success("Usuário autenticado com sucesso!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       })
       .catch((error) => {
         const errorMessage = error.message;
-        alert(errorMessage);
-        // ..
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      });
+  };
+
+  const GoogleSign = async (auth, provider) => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+        setSigned(true);
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("token", user.accessToken);
+        toast.success("Usuário autenticado com sucesso!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       });
   };
 
   const SignOut = async () => {
-    signOut(auth);
-    setUser(null);
-    setSigned(false);
-    localStorage.clear();
+    signOut(auth)
+      .then(() => {
+        setUser(null);
+        setSigned(false);
+        localStorage.clear();
+        toast.warn("Usuário desconectado", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      });
   };
 
   return (
@@ -75,6 +168,7 @@ export const AuthProvider = ({ children }) => {
         Login,
         SignUp,
         SignOut,
+        GoogleSign,
       }}
     >
       {children}
