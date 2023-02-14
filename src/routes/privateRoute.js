@@ -2,8 +2,15 @@ import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import { AuthContext } from "../context";
 
-export const PrivateRoute = ({ Item }) => {
-  const { signed } = useContext(AuthContext);
+import BackdropLoading from "../components/BackdropLoading";
 
-  return signed ? <Item /> : <Navigate to="/login" />;
+export const PrivateRoute = ({ Item }) => {
+  const { signed, loading } = useContext(AuthContext);
+
+  return (
+    <>
+      {loading && <BackdropLoading />}
+      {signed ? <Item /> : <Navigate to="/login" />}
+    </>
+  );
 };

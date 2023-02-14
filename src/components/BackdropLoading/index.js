@@ -5,7 +5,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const BackdropLoading = () => {
   return (
-    <Backdrop open={true}>
+    <Backdrop className="backdrop" open={true}>
       <CircularProgress color="inherit" />
     </Backdrop>
   );

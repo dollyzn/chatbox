@@ -7,6 +7,7 @@
 }
 
 .BoxMM {
+  margin-top: 30px;
   background-image: radial-gradient(rgb(98, 207, 207), rgb(0, 204, 255));
   max-width: 70vh;
   max-height: 90vh;
@@ -33,4 +34,12 @@
   border-top-right-radius: 50px;
   height: 50px;
   width: 200px;
+}
+
+.backdrop {
+  color: #fff;
+}
+
+.avataricon {
+  border-radius: 50%;
 }

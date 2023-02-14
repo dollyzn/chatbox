@@ -11,22 +11,26 @@ import {
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [signed, setSigned] = useState(null);
+  const [signed, setSigned] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
     const loadingStoreData = async () => {
       if (token) {
-        setUser(user);
+        let userJSON = JSON.parse(user);
+        setUser(userJSON);
         setSigned(true);
+        setLoading(false);
       }
     };
     loadingStoreData();
   }, []);
 
   const Login = async (email, password) => {
+    setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -36,7 +40,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", user.accessToken);
         toast.success("Usuário autenticado com sucesso!", {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -44,12 +48,13 @@ export const AuthProvider = ({ children }) => {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
       })
       .catch((error) => {
         const errorMessage = error.message;
         toast.error(errorMessage, {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -57,10 +62,12 @@ export const AuthProvider = ({ children }) => {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
       });
   };
 
   const SignUp = async (email, password) => {
+    setLoading(true);
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -70,7 +77,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", user.accessToken);
         toast.success("Usuário autenticado com sucesso!", {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -78,12 +85,13 @@ export const AuthProvider = ({ children }) => {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
       })
       .catch((error) => {
         const errorMessage = error.message;
         toast.error(errorMessage, {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -91,10 +99,12 @@ export const AuthProvider = ({ children }) => {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
       });
   };
 
   const GoogleSign = async (auth, provider) => {
+    setLoading(true);
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
@@ -104,7 +114,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("token", user.accessToken);
         toast.success("Usuário autenticado com sucesso!", {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -112,12 +122,13 @@ export const AuthProvider = ({ children }) => {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
       })
       .catch((error) => {
         const errorMessage = error.message;
         toast.error(errorMessage, {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -125,10 +136,12 @@ export const AuthProvider = ({ children }) => {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
       });
   };
 
   const SignOut = async () => {
+    setLoading(true);
     signOut(auth)
       .then(() => {
         setUser(null);
@@ -136,7 +149,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.clear();
         toast.warn("Usuário desconectado", {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -144,12 +157,13 @@ export const AuthProvider = ({ children }) => {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
       })
       .catch((error) => {
         const errorMessage = error.message;
         toast.error(errorMessage, {
           position: "top-right",
-          autoClose: 5000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -157,6 +171,7 @@ export const AuthProvider = ({ children }) => {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
       });
   };
 
@@ -165,6 +180,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         user,
         signed,
+        loading,
         Login,
         SignUp,
         SignOut,

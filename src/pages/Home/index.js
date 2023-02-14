@@ -25,11 +25,13 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Icon from "../../assets/dash.png";
+import Icon from "../../assets/toolbar.png";
 
+import { ChatBox } from "../../components/ChatBox";
 import Chart from "../../components/Chart";
 import Deposits from "../../components/Deposits";
 import Orders from "../../components/Orders";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -79,12 +81,15 @@ const Drawer = styled(MuiDrawer, {
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
 
+  const { user } = useContext(AuthContext);
   const { SignOut } = useContext(AuthContext);
+
+  let navigate = useNavigate();
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -98,6 +103,11 @@ function DashboardContent() {
   const handleCloseMenu = () => {
     setAnchorEl(null);
     setMenuOpen(false);
+  };
+
+  const handleNavigate = (path) => {
+    navigate(path);
+    console.log("teset");
   };
 
   return (
@@ -122,7 +132,14 @@ function DashboardContent() {
             >
               <MenuIcon />
             </IconButton>
-            <img src={Icon} width="50px" alt="Logo Icon" draggable="false" />
+            <img
+              src={Icon}
+              className="homeimg"
+              width="130px"
+              alt="Logo Icon"
+              onClick={() => handleNavigate("/login")}
+              draggable="false"
+            />
             <Typography
               component="h1"
               variant="h6"
@@ -131,14 +148,7 @@ function DashboardContent() {
               alignItems="center"
               noWrap
               sx={{ flexGrow: 1, ml: 1 }}
-            >
-              ChatBox
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            ></Typography>
             <IconButton
               aria-label="account of current user"
               aria-controls="menu-appbar"
@@ -146,7 +156,16 @@ function DashboardContent() {
               onClick={handleMenu}
               color="inherit"
             >
-              <AccountCircleIcon />
+              {user.photoURL ? (
+                <img
+                  src={user?.photoURL}
+                  width="40px"
+                  className="avataricon"
+                  alt="Avatar"
+                />
+              ) : (
+                <AccountCircleIcon />
+              )}
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -200,8 +219,9 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
+            <ChatBox />
+            {/* <Grid container spacing={3}>
+              {/* Chart }
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
                   sx={{
@@ -214,7 +234,7 @@ function DashboardContent() {
                   <Chart />
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
+              {/* Recent Deposits }
               <Grid item xs={12} md={4} lg={3}>
                 <Paper
                   sx={{
@@ -227,13 +247,13 @@ function DashboardContent() {
                   <Deposits />
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
+              {/* Recent Orders }
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
                   <Orders />
                 </Paper>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Container>
         </Box>
       </Box>
@@ -241,6 +261,4 @@ function DashboardContent() {
   );
 }
 
-export default function Dashboard() {
-  return <DashboardContent />;
-}
+export default Home;
