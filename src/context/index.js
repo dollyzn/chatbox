@@ -20,8 +20,7 @@ export const AuthProvider = ({ children }) => {
     const user = localStorage.getItem("user");
     const loadingStoreData = async () => {
       if (token) {
-        let userJSON = JSON.parse(user);
-        setUser(userJSON);
+        setUser(user);
         setSigned(true);
         setLoading(false);
       }

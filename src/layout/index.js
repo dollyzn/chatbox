@@ -1,12 +1,9 @@
 import { useContext, useState } from "react";
-import { AuthContext } from "../../context";
+import { AuthContext } from "../context";
 
 import {
   MenuItem,
   Menu,
-  Paper,
-  Grid,
-  Container,
   Badge,
   IconButton,
   Divider,
@@ -17,7 +14,7 @@ import {
   CssBaseline,
 } from "@mui/material";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import { mainListItems, secondaryListItems } from "../../components/ListItems";
+import { mainListItems, secondaryListItems } from "./MainListItems";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 
@@ -25,15 +22,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Icon from "../../assets/dash.png";
+import Icon from "../assets/dash.png";
 
-import { ChatBox } from "../../components/ChatBox";
-import Chart from "../../components/Chart";
-import Deposits from "../../components/Deposits";
-import Orders from "../../components/Orders";
-import { useNavigate } from "react-router-dom";
-
-import LoggedInLayout from "../../layout";
+const drawerWidth = 240;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -81,12 +72,12 @@ const Drawer = styled(MuiDrawer, {
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+function LoggedInLayout({ children }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
 
-  const { SignOut } = useContext(AuthContext);
+  const { SignOut, user } = useContext(AuthContext);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -148,7 +139,16 @@ function DashboardContent() {
               onClick={handleMenu}
               color="inherit"
             >
-              <AccountCircleIcon />
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  width="40px"
+                  style={{ borderRadius: "50%" }}
+                  alt="avatar"
+                />
+              ) : (
+                <AccountCircleIcon />
+              )}
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -201,46 +201,11 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  <Chart />
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: "flex",
-                    flexDirection: "column",
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Orders />
-                </Paper>
-              </Grid>
-            </Grid>
-          </Container>
+          <main>{children ? children : null}</main>
         </Box>
       </Box>
     </ThemeProvider>
   );
 }
 
-export default Home;
+export default LoggedInLayout;
