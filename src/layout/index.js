@@ -22,7 +22,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import Icon from "../assets/dash.png";
+import Icon from "../assets/toolbar.png";
 
 const drawerWidth = 240;
 
@@ -78,6 +78,7 @@ function LoggedInLayout({ children }) {
   const [open, setOpen] = useState(false);
 
   const { SignOut, user } = useContext(AuthContext);
+  console.log(user.photoURL);
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -100,7 +101,7 @@ function LoggedInLayout({ children }) {
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: "24px", // keep right padding when drawer closed
+              pr: "24px",
             }}
           >
             <IconButton
@@ -115,7 +116,7 @@ function LoggedInLayout({ children }) {
             >
               <MenuIcon />
             </IconButton>
-            <img src={Icon} width="50px" alt="Logo Icon" draggable="false" />
+            <img src={Icon} width="140px" alt="Logo Icon" draggable="false" />
             <Typography
               component="h1"
               variant="h6"
@@ -124,9 +125,7 @@ function LoggedInLayout({ children }) {
               alignItems="center"
               noWrap
               sx={{ flexGrow: 1, ml: 1 }}
-            >
-              ChatBox
-            </Typography>
+            ></Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
@@ -139,7 +138,7 @@ function LoggedInLayout({ children }) {
               onClick={handleMenu}
               color="inherit"
             >
-              {user.photoURL ? (
+              {user?.photoURL ? (
                 <img
                   src={user.photoURL}
                   width="40px"

@@ -1,9 +1,13 @@
 import Box from "@mui/material/Box";
+import { useContext } from "react";
+import { AuthContext } from "../../context";
 import { Button, TextField } from "@mui/material";
 import { db } from "../../config/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export const ChatBox = () => {
+  const { user } = useContext(AuthContext);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -16,8 +20,9 @@ export const ChatBox = () => {
     try {
       const docRef = await addDoc(collection(db, "messages"), {
         text: message,
-        photoURL: "Lovelace",
-        uid: "teste",
+        photoURL: user.photoURL,
+        uid: user.uid,
+        createdAt: serverTimestamp(),
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
