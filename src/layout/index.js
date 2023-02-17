@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context";
+import { Link } from "react-router-dom";
 
 import {
   MenuItem,
@@ -116,7 +117,9 @@ function LoggedInLayout({ children }) {
             >
               <MenuIcon />
             </IconButton>
-            <img src={Icon} width="140px" alt="Logo Icon" draggable="false" />
+            <Link to="/home">
+              <img src={Icon} width="130px" alt="Logo Icon" draggable="false" />
+            </Link>
             <Typography
               component="h1"
               variant="h6"

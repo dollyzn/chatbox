@@ -1,11 +1,11 @@
-import { ChatBox } from "../../components/ChatBox";
+import ChatsManager from "../../components/ChatsManager";
 
 import LoggedInLayout from "../../layout";
 
 function Chat() {
   return (
     <LoggedInLayout>
-      <ChatBox />
+      <ChatsManager />
     </LoggedInLayout>
   );
 }
