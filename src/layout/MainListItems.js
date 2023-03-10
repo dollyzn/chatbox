@@ -7,8 +7,9 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
 import BarChartIcon from "@mui/icons-material/BarChart";
-import LayersIcon from "@mui/icons-material/Layers";
+import ChatIcon from "@mui/icons-material/Chat";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import { Link } from "react-router-dom";
 
 export const mainListItems = (
@@ -21,29 +22,17 @@ export const mainListItems = (
         <ListItemText primary="Dashboard" />
       </ListItemButton>
     </Link>
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItemButton>
     <Link to="/chat">
       <ListItemButton>
         <ListItemIcon>
-          <BarChartIcon />
+          <ChatIcon />
         </ListItemIcon>
         <ListItemText primary="Reports" />
       </ListItemButton>
     </Link>
     <ListItemButton>
       <ListItemIcon>
-        <LayersIcon />
+        <WhatsAppIcon />
       </ListItemIcon>
       <ListItemText primary="Integrations" />
     </ListItemButton>

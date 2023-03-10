@@ -79,7 +79,6 @@ function LoggedInLayout({ children }) {
   const [open, setOpen] = useState(false);
 
   const { SignOut, user } = useContext(AuthContext);
-  console.log(user.photoURL);
 
   const toggleDrawer = () => {
     setOpen(!open);

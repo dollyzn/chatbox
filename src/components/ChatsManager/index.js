@@ -20,11 +20,11 @@ function ChatsManager() {
         transition={{ delay: 0, duration: 0 }}
         onMouseEnter={() => {
           console.log(
-            Math.floor(Math.random(window.innerWidth) * 500),
-            Math.floor(Math.random(window.innerWidth) * 500)
+            Math.floor(Math.random(window.innerWidth) * 1000 - 100),
+            Math.floor(Math.random(window.innerHeight) * 1000 - 100)
           );
-          setPos(Math.floor(Math.random(window.innerWidth) * 500));
-          setPosy(Math.floor(Math.random(window.innerWidth) * 500));
+          setPos(Math.floor(Math.random(window.innerWidth) * 1000 - 100));
+          setPosy(Math.floor(Math.random(window.innerHeight) * 1000 - 100));
         }}
       >
         Enviar
