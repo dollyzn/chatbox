@@ -15,7 +15,7 @@ import {
   CssBaseline,
 } from "@mui/material";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
-import { mainListItems, secondaryListItems } from "./MainListItems";
+import MainListItems from "./MainListItems";
 import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 
@@ -184,9 +184,7 @@ function LoggedInLayout({ children }) {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
+            <MainListItems />
           </List>
         </Drawer>
         <Box
