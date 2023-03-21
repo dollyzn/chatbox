@@ -1,7 +1,9 @@
-import { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { auth, provider } from "../../config/firebase";
 import { AuthContext } from "../../context";
+import { Link as RouterLink } from "react-router-dom";
+import * as Yup from "yup";
 
 import {
   Button,
@@ -22,12 +24,54 @@ const theme = createTheme();
 
 const SignUp = () => {
   const { SignUp, GoogleSign, signed } = useContext(AuthContext);
+  const [formError, setFormError] = useState({});
 
-  const handleSubmit = (event) => {
+  function RenderLink(props) {
+    const { to, variant, text } = props;
+
+    const renderLink = React.useMemo(
+      () =>
+        React.forwardRef((itemProps, ref) => (
+          <RouterLink to={to} ref={ref} {...itemProps} />
+        )),
+      [to]
+    );
+
+    return (
+      <Link component={renderLink} variant={variant}>
+        {text}
+      </Link>
+    );
+  }
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    SignUp(data.get("email"), data.get("password"));
+    const values = Object.fromEntries(data.entries());
+
+    try {
+      await signUpSchema.validate(values, { abortEarly: false });
+      SignUp(data.get("email"), data.get("password"));
+    } catch (error) {
+      const errors = {};
+
+      error.inner.forEach((err) => {
+        errors[err.path] = err.message;
+      });
+
+      setFormError(errors);
+    }
   };
+
+  const signUpSchema = Yup.object().shape({
+    name: Yup.string().required("O nome é obrigatório"),
+    email: Yup.string()
+      .email("Digite um email válido")
+      .required("O email é obrigatório"),
+    password: Yup.string()
+      .min(6, "A senha deve ter pelo menos 6 caracteres")
+      .required("A senha é obrigatória"),
+  });
 
   if (signed) {
     return <Navigate to="/home" />;
@@ -60,46 +104,39 @@ const SignUp = () => {
               sx={{ mt: 3 }}
             >
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <TextField
                     autoComplete="given-name"
-                    name="firstName"
-                    required
+                    name="name"
                     fullWidth
-                    id="firstName"
+                    id="name"
                     label="Nome"
+                    error={Boolean(formError.name)}
+                    helperText={formError.name}
                     autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="lastName"
-                    label="Sobrenome"
-                    name="lastName"
-                    autoComplete="family-name"
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    required
                     fullWidth
                     id="email"
                     label="Email"
                     name="email"
                     autoComplete="email"
+                    error={Boolean(formError.email)}
+                    helperText={formError.email}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    required
                     fullWidth
                     name="password"
                     label="Senha"
                     type="password"
                     id="password"
                     autoComplete="new-password"
+                    error={Boolean(formError.password)}
+                    helperText={formError.password}
                   />
                 </Grid>
               </Grid>
@@ -122,9 +159,11 @@ const SignUp = () => {
               </Button>
               <Grid container justifyContent="flex-end">
                 <Grid item xs>
-                  <Link href="/login" variant="body2">
-                    Já possui uma conta? Entre!
-                  </Link>
+                  <RenderLink
+                    to="/login"
+                    variant="body2"
+                    text="Já possui uma conta? Entre!"
+                  ></RenderLink>
                 </Grid>
               </Grid>
             </Box>

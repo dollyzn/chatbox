@@ -1,7 +1,9 @@
-import { useContext } from "react";
+import React, { useContext, useState } from "react";
+import * as Yup from "yup";
 import { Navigate } from "react-router-dom";
 import { auth, provider } from "../../config/firebase";
 import { AuthContext } from "../../context";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
   Button,
@@ -22,12 +24,53 @@ const theme = createTheme();
 
 const Login = () => {
   const { Login, GoogleSign, signed } = useContext(AuthContext);
+  const [formError, setFormError] = useState({});
 
-  const handleSubmit = (event) => {
+  function RenderLink(props) {
+    const { to, variant, text } = props;
+
+    const renderLink = React.useMemo(
+      () =>
+        React.forwardRef((itemProps, ref) => (
+          <RouterLink to={to} ref={ref} {...itemProps} />
+        )),
+      [to]
+    );
+
+    return (
+      <Link component={renderLink} variant={variant}>
+        {text}
+      </Link>
+    );
+  }
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    Login(data.get("email"), data.get("password"));
+    const values = Object.fromEntries(data.entries());
+
+    try {
+      await loginSchema.validate(values, { abortEarly: false });
+      Login(data.get("email"), data.get("password"));
+    } catch (error) {
+      const errors = {};
+
+      error.inner.forEach((err) => {
+        errors[err.path] = err.message;
+      });
+
+      setFormError(errors);
+    }
   };
+
+  const loginSchema = Yup.object().shape({
+    email: Yup.string()
+      .email("Digite um email válido")
+      .required("O email é obrigatório"),
+    password: Yup.string()
+      .min(6, "A senha deve ter pelo menos 6 caracteres")
+      .required("A senha é obrigatória"),
+  });
 
   if (signed) {
     return <Navigate to="/home" />;
@@ -61,22 +104,24 @@ const Login = () => {
             >
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 id="email"
                 label="Email"
                 name="email"
                 autoComplete="email"
+                error={Boolean(formError.email)}
+                helperText={formError.email}
                 autoFocus
               />
               <TextField
                 margin="normal"
-                required
                 fullWidth
                 name="password"
                 label="Senha"
                 type="password"
                 id="password"
+                error={Boolean(formError.password)}
+                helperText={formError.password}
                 autoComplete="current-password"
               />
               <Button
@@ -98,9 +143,11 @@ const Login = () => {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="/signup" variant="body2">
-                    Não tem uma conta? Cadastre-se!
-                  </Link>
+                  <RenderLink
+                    to="/signup"
+                    variant="body2"
+                    text="Não tem uma conta? Cadastre-se!"
+                  ></RenderLink>
                 </Grid>
               </Grid>
             </Box>

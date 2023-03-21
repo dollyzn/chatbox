@@ -1,4 +1,3 @@
-import { margin } from "@mui/system";
 import { motion } from "framer-motion";
 import { Container } from "@mui/system";
 import { useState } from "react";
@@ -6,7 +5,7 @@ import { useState } from "react";
 function ChatsManager() {
   const [pos, setPos] = useState();
   const [posy, setPosy] = useState();
-  const { innerWidth: width, innerHeight: height } = window;
+
   return (
     <Container sx={{ mt: 10 }}>
       <motion.div
