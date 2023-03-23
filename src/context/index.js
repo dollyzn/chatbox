@@ -4,6 +4,7 @@ import { auth } from "../config/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updateProfile,
   signOut,
   signInWithPopup,
 } from "firebase/auth";
@@ -31,76 +32,87 @@ export const AuthProvider = ({ children }) => {
 
   const Login = async (email, password) => {
     setLoading(true);
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setUser(user);
-        setSigned(true);
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", user.accessToken);
-        toast.success("Usuário autenticado com sucesso!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        toast.error(errorMessage, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+      setUser(user);
+      setSigned(true);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", user.accessToken);
+      toast.success("Usuário autenticado com sucesso!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
+      setLoading(false);
+    } catch (error) {
+      const errorMessage = error.message;
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setLoading(false);
+    }
   };
 
-  const SignUp = async (email, password) => {
+  const SignUp = async (name, email, password) => {
     setLoading(true);
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setUser(user);
-        setSigned(true);
-        localStorage.setItem("user", JSON.stringify(user));
-        localStorage.setItem("token", user.accessToken);
-        toast.success("Usuário autenticado com sucesso!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
-      })
-      .catch((error) => {
-        const errorMessage = error.message;
-        toast.error(errorMessage, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const user = userCredential.user;
+
+      await updateProfile(user, { displayName: name });
+
+      setUser(user);
+      setSigned(true);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", user.accessToken);
+      toast.success("Usuário autenticado com sucesso!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
+      setLoading(false);
+    } catch (error) {
+      const errorMessage = error.message;
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setLoading(false);
+    }
   };
 
   const GoogleSign = async (auth, provider) => {

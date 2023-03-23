@@ -51,7 +51,7 @@ const SignUp = () => {
 
     try {
       await signUpSchema.validate(values, { abortEarly: false });
-      SignUp(data.get("email"), data.get("password"));
+      SignUp(data.get("name"), data.get("email"), data.get("password"));
     } catch (error) {
       const errors = {};
 
