@@ -3,7 +3,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ChatIcon from "@mui/icons-material/Chat";
+import AssistantIcon from "@mui/icons-material/Assistant";
 import { Link as RouterLink } from "react-router-dom";
 
 function ListItemLink(props) {
@@ -31,7 +31,7 @@ function MainListItems() {
   return (
     <React.Fragment>
       <ListItemLink to="/home" primary="Dashboard" icon={<DashboardIcon />} />
-      <ListItemLink to="/chat" primary="Chat" icon={<ChatIcon />} />
+      <ListItemLink to="/chat" primary="Chat" icon={<AssistantIcon />} />
     </React.Fragment>
   );
 }

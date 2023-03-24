@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import {
   MenuItem,
   Menu,
-  Badge,
   IconButton,
   Divider,
   Typography,
@@ -21,7 +20,6 @@ import MuiAppBar from "@mui/material/AppBar";
 
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Icon from "../assets/toolbar.png";
 
@@ -128,11 +126,6 @@ function LoggedInLayout({ children }) {
               noWrap
               sx={{ flexGrow: 1, ml: 1 }}
             ></Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
             <IconButton
               aria-label="account of current user"
               aria-controls="menu-appbar"

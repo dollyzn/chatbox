@@ -1,34 +1,24 @@
-import { motion } from "framer-motion";
 import { Container } from "@mui/system";
-import { useState } from "react";
+import { Grid } from "@mui/material";
+import DialogFlowIcon from "../../assets/flow.png";
+import ChatGPTIcon from "../../assets/gpt.png";
 
 function ChatsManager() {
-  const [pos, setPos] = useState();
-  const [posy, setPosy] = useState();
-
   return (
-    <Container sx={{ mt: 10 }}>
-      <motion.div
-        className="container"
-        whileHover={{}}
-        animate={{
-          x: pos,
-          y: posy,
-          borderRadius: "30px",
-        }}
-        transition={{ delay: 0, duration: 0 }}
-        onMouseEnter={() => {
-          console.log(
-            Math.floor(Math.random(window.innerWidth) * 1000 - 100),
-            Math.floor(Math.random(window.innerHeight) * 1000 - 100)
-          );
-          setPos(Math.floor(Math.random(window.innerWidth) * 1000 - 100));
-          setPosy(Math.floor(Math.random(window.innerHeight) * 1000 - 100));
-        }}
-      >
-        Enviar
-      </motion.div>
-    </Container>
+    <Grid
+      container
+      justifyContent="center"
+      alignContent="center"
+      height="90vh"
+      columnSpacing="200px"
+    >
+      <Grid item>
+        <img src={ChatGPTIcon} width="400px" alt="gpt icon" />
+      </Grid>
+      <Grid item>
+        <img src={DialogFlowIcon} width="330px" alt="dialogflow icon" />
+      </Grid>
+    </Grid>
   );
 }
 

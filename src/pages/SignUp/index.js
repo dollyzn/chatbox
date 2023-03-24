@@ -14,6 +14,8 @@ import {
   Box,
   Typography,
   Container,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -25,6 +27,7 @@ const theme = createTheme();
 const SignUp = () => {
   const { SignUp, GoogleSign, signed } = useContext(AuthContext);
   const [formError, setFormError] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   function RenderLink(props) {
     const { to, variant, text } = props;
@@ -132,11 +135,24 @@ const SignUp = () => {
                     fullWidth
                     name="password"
                     label="Senha"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     autoComplete="new-password"
                     error={Boolean(formError.password)}
                     helperText={formError.password}
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        onChange={() => setShowPassword(!showPassword)}
+                      />
+                    }
+                    label="Mostrar senha"
+                    sx={{
+                      "& .MuiFormControlLabel-label": {
+                        fontSize: 14,
+                      },
+                    }}
                   />
                 </Grid>
               </Grid>
