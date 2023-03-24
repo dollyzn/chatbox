@@ -122,7 +122,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const GoogleSign = async (auth, provider) => {
-    setLoading(true);
     try {
       const userCredential = await signInWithPopup(auth, provider);
 
@@ -142,7 +141,6 @@ export const AuthProvider = ({ children }) => {
         progress: undefined,
         theme: "light",
       });
-      setLoading(false);
     } catch (error) {
       const errorMessage = error.message;
       toast.error(errorMessage, {
@@ -155,7 +153,6 @@ export const AuthProvider = ({ children }) => {
         progress: undefined,
         theme: "light",
       });
-      setLoading(false);
     }
   };
 
