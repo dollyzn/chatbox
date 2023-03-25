@@ -5,29 +5,31 @@ import { auth, provider } from "../../config/firebase";
 import { AuthContext } from "../../context";
 import { Link as RouterLink } from "react-router-dom";
 
+import { CssBaseline, Grid, Box, Container } from "@mui/material";
 import {
   Button,
-  CssBaseline,
-  TextField,
-  Link,
-  Grid,
-  Box,
+  Input,
+  FormControl,
+  FormLabel,
+  FormHelperText,
   Typography,
-  Container,
-} from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+  Link,
+  IconButton,
+} from "@mui/joy";
 
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
 import loginIcon from "../../assets/icon.png";
-
-const theme = createTheme();
 
 const Login = () => {
   const { Login, GoogleSign, signed } = useContext(AuthContext);
   const [formError, setFormError] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   function RenderLink(props) {
-    const { to, variant, text } = props;
+    const { to, level, underline, text } = props;
 
     const renderLink = React.useMemo(
       () =>
@@ -38,11 +40,17 @@ const Login = () => {
     );
 
     return (
-      <Link component={renderLink} variant={variant}>
+      <Link component={renderLink} level={level} underline={underline}>
         {text}
       </Link>
     );
   }
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    await GoogleSign(auth, provider);
+    setLoading(false);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -51,6 +59,7 @@ const Login = () => {
 
     try {
       await loginSchema.validate(values, { abortEarly: false });
+      setFormError({});
       Login(data.get("email"), data.get("password"));
     } catch (error) {
       const errors = {};
@@ -76,85 +85,113 @@ const Login = () => {
     return <Navigate to="/home" />;
   } else {
     return (
-      <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 10,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src={loginIcon}
+            width="150px"
+            alt="Logo Icon"
+            draggable="false"
+          />
+          <Typography level="h2" sx={{ mb: 2 }}>
+            Login
+          </Typography>
           <Box
-            sx={{
-              marginTop: 10,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
           >
-            <img
-              src={loginIcon}
-              width="150px"
-              alt="Logo Icon"
-              draggable="false"
-            />
-            <Typography component="h1" variant="h5" sx={{ mt: 5 }}>
-              Login
-            </Typography>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ mt: 1 }}
-            >
-              <TextField
-                margin="normal"
-                fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                error={Boolean(formError.email)}
-                helperText={formError.email}
-                autoFocus
-              />
-              <TextField
-                margin="normal"
-                fullWidth
-                name="password"
-                label="Senha"
-                type="password"
-                id="password"
-                error={Boolean(formError.password)}
-                helperText={formError.password}
-                autoComplete="current-password"
-              />
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Entrar
-              </Button>
-              <Button
-                variant="outlined"
-                fullWidth
-                sx={{ mb: 2 }}
-                onClick={() => GoogleSign(auth, provider)}
-                startIcon={<GoogleIcon />}
-              >
-                Entrar com o Google
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <RenderLink
-                    to="/signup"
-                    variant="body2"
-                    text="Não tem uma conta? Cadastre-se!"
-                  ></RenderLink>
-                </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormControl>
+                  <FormLabel sx={{ color: formError.email ? "#d3232f" : "" }}>
+                    Email
+                  </FormLabel>
+                  <Input
+                    fullWidth
+                    size="lg"
+                    id="email"
+                    name="email"
+                    autoComplete="email"
+                    error={Boolean(formError.email)}
+                  />
+                  <FormHelperText sx={{ color: "#d3232f" }}>
+                    {formError.email ? formError.email : ""}
+                  </FormHelperText>
+                </FormControl>
               </Grid>
-            </Box>
+              <Grid item xs={12}>
+                <FormControl>
+                  <FormLabel
+                    sx={{ color: formError.password ? "#d3232f" : "" }}
+                  >
+                    Senha
+                  </FormLabel>
+                  <Input
+                    fullWidth
+                    size="lg"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    autoComplete="new-password"
+                    error={Boolean(formError.password)}
+                    endDecorator={
+                      <IconButton
+                        variant="plain"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    }
+                  />
+                  <FormHelperText sx={{ color: "#d3232f" }}>
+                    {formError.password ? formError.password : ""}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="solid"
+              sx={{ mt: 2, mb: 2 }}
+            >
+              Entrar
+            </Button>
+            <Button
+              loading={loading}
+              loadingPosition="start"
+              variant="outlined"
+              fullWidth
+              sx={{ mb: 2 }}
+              onClick={handleGoogleSignIn}
+              startDecorator={<GoogleIcon />}
+            >
+              Entrar com o Google
+            </Button>
+            <Grid container>
+              <Grid item xs>
+                <RenderLink
+                  to="/signup"
+                  level="body2"
+                  underline="hover"
+                  text="Não tem uma conta? Cadastre-se!"
+                ></RenderLink>
+              </Grid>
+            </Grid>
           </Box>
-          {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
-        </Container>
-      </ThemeProvider>
+        </Box>
+        {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
+      </Container>
     );
   }
 };

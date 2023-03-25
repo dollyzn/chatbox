@@ -5,16 +5,9 @@ import { AuthContext } from "../../context";
 import { Link as RouterLink } from "react-router-dom";
 import * as Yup from "yup";
 
+import { CssBaseline, Grid, Box, Container } from "@mui/material";
 import {
-  CssBaseline,
-  TextField,
-  Grid,
-  Box,
-  Container,
-  FormControlLabel,
-} from "@mui/material";
-import {
-  Checkbox,
+  IconButton,
   Button,
   Input,
   FormControl,
@@ -24,6 +17,8 @@ import {
   Link,
 } from "@mui/joy";
 
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
 import loginIcon from "../../assets/icon.png";
 
@@ -64,6 +59,7 @@ const SignUp = () => {
 
     try {
       await signUpSchema.validate(values, { abortEarly: false });
+      setFormError({});
       SignUp(data.get("name"), data.get("email"), data.get("password"));
     } catch (error) {
       const errors = {};
@@ -115,10 +111,12 @@ const SignUp = () => {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
-            <FormControl>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <FormLabel>Nome</FormLabel>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <FormControl>
+                  <FormLabel sx={{ color: formError.name ? "#d3232f" : "" }}>
+                    Nome
+                  </FormLabel>
                   <Input
                     fullWidth
                     size="lg"
@@ -126,12 +124,19 @@ const SignUp = () => {
                     name="name"
                     id="name"
                     error={Boolean(formError.name)}
-                    helperText={formError.name}
+                    placeholder="Nome"
                     autoFocus
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormLabel>Email</FormLabel>
+                  <FormHelperText sx={{ color: "#d3232f" }}>
+                    {formError.name ? formError.name : ""}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl>
+                  <FormLabel sx={{ color: formError.email ? "#d3232f" : "" }}>
+                    Email
+                  </FormLabel>
                   <Input
                     fullWidth
                     size="lg"
@@ -139,11 +144,19 @@ const SignUp = () => {
                     name="email"
                     autoComplete="email"
                     error={Boolean(formError.email)}
-                    helperText={formError.email}
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormLabel>Senha</FormLabel>
+                  <FormHelperText sx={{ color: "#d3232f" }}>
+                    {formError.email ? formError.email : ""}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl>
+                  <FormLabel
+                    sx={{ color: formError.password ? "#d3232f" : "" }}
+                  >
+                    Senha
+                  </FormLabel>
                   <Input
                     fullWidth
                     size="lg"
@@ -152,47 +165,50 @@ const SignUp = () => {
                     id="password"
                     autoComplete="new-password"
                     error={Boolean(formError.password)}
-                    helperText={formError.password}
+                    endDecorator={
+                      <IconButton
+                        variant="plain"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    }
                   />
-
-                  <Checkbox
-                    onChange={() => setShowPassword(!showPassword)}
-                    label="Mostrar senha"
-                    size="sm"
-                    sx={{ mt: 1 }}
-                  />
-                </Grid>
+                  <FormHelperText sx={{ color: "#d3232f" }}>
+                    {formError.password ? formError.password : ""}
+                  </FormHelperText>
+                </FormControl>
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="solid"
-                sx={{ mt: 2, mb: 2 }}
-              >
-                Cadastrar
-              </Button>
-              <Button
-                loading={loading}
-                loadingPosition="start"
-                variant="outlined"
-                fullWidth
-                sx={{ mb: 2 }}
-                onClick={handleGoogleSignIn}
-                startDecorator={<GoogleIcon />}
-              >
-                Entrar com o Google
-              </Button>
-              <Grid container justifyContent="flex-end">
-                <Grid item xs>
-                  <RenderLink
-                    to="/login"
-                    level="body2"
-                    underline="hover"
-                    text="Já possui uma conta? Entre!"
-                  ></RenderLink>
-                </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="solid"
+              sx={{ mt: 2, mb: 2 }}
+            >
+              Cadastrar
+            </Button>
+            <Button
+              loading={loading}
+              loadingPosition="start"
+              variant="outlined"
+              fullWidth
+              sx={{ mb: 2 }}
+              onClick={handleGoogleSignIn}
+              startDecorator={<GoogleIcon />}
+            >
+              Entrar com o Google
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item xs>
+                <RenderLink
+                  to="/login"
+                  level="body2"
+                  underline="hover"
+                  text="Já possui uma conta? Entre!"
+                ></RenderLink>
               </Grid>
-            </FormControl>
+            </Grid>
           </Box>
         </Box>
       </Container>
