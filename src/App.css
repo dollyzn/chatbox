@@ -2,54 +2,6 @@
   margin: 0;
 }
 
-.bodyBox {
-  background-color: #fff;
-}
-
-.container {
-  width: 100px;
-  height: 40px;
-  padding-top: 8px;
-  font-weight: bold;
-  color: #fff;
-  text-align: center;
-  background: blue;
-}
-
-.BoxMM {
-  margin-top: 30px;
-  background-image: radial-gradient(rgb(98, 207, 207), rgb(0, 204, 255));
-  max-width: 70vh;
-  max-height: 90vh;
-  border-radius: 50px;
-  height: 100%;
-  width: 100%;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  justify-content: right;
-  box-shadow: 10px 10px 18px 0px rgba(0, 0, 0, 0.233);
-}
-
-.SignInButton {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.SignOutButton {
-  position: absolute;
-  border-top-right-radius: 50px;
-  height: 50px;
-  width: 200px;
-}
-
 .backdrop {
   color: #fff;
-}
-
-.avataricon {
-  border-radius: 50%;
 }

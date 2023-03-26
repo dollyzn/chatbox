@@ -1,26 +1,34 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../context";
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
 import {
-  MenuItem,
-  Menu,
-  IconButton,
   Divider,
-  Typography,
   List,
   Toolbar,
   Box,
   CssBaseline,
+  Drawer,
 } from "@mui/material";
-import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import {
+  Avatar,
+  IconButton,
+  Button,
+  Link,
+  Typography,
+  MenuList,
+  MenuItem,
+  ListItemDecorator,
+} from "@mui/joy";
+import { styled } from "@mui/material/styles";
 import MainListItems from "./MainListItems";
-import MuiDrawer from "@mui/material/Drawer";
+import PopperUnstyled from "@mui/base/PopperUnstyled";
+import ClickAwayListener from "@mui/base/ClickAwayListener";
 import MuiAppBar from "@mui/material/AppBar";
 
+import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Icon from "../assets/toolbar.png";
 
 const drawerWidth = 240;
@@ -34,7 +42,7 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-    marginLeft: drawerWidth,
+    marginLeft: `${drawerWidth}px`,
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
@@ -43,160 +51,203 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  "& .MuiDrawer-paper": {
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    boxSizing: "border-box",
-    ...(!open && {
-      overflowX: "hidden",
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9),
-      },
-    }),
-  },
-}));
+const Popup = styled(PopperUnstyled)({
+  zIndex: 1000,
+});
 
-const mdTheme = createTheme();
+const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
+  ({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: `-${drawerWidth}px`,
+    ...(open && {
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: 0,
+    }),
+  })
+);
 
 function LoggedInLayout({ children }) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
+
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleListKeyDown = (event) => {
+    if (event.key === "Tab") {
+      setAnchorEl(null);
+    } else if (event.key === "Escape") {
+      anchorEl?.focus();
+      setAnchorEl(null);
+    }
+  };
 
   const { SignOut, user } = useContext(AuthContext);
+
+  function RenderLink(props) {
+    const { to, src, width, alt } = props;
+
+    const renderLink = React.useMemo(
+      () =>
+        React.forwardRef((itemProps, ref) => (
+          <RouterLink to={to} ref={ref} {...itemProps} />
+        )),
+      [to]
+    );
+
+    return (
+      <Link component={renderLink}>
+        <img src={src} width={width} alt={alt} draggable="false" />
+      </Link>
+    );
+  }
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-    setMenuOpen(true);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-    setMenuOpen(false);
-  };
-
   return (
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
-        <AppBar position="absolute" open={open}>
-          <Toolbar
-            sx={{
-              pr: "24px",
-            }}
-          >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: "36px",
-                ...(open && { display: "none" }),
-              }}
-            >
-              <MenuIcon />
-            </IconButton>
-            <Link to="/home">
-              <img src={Icon} width="130px" alt="Logo Icon" draggable="false" />
-            </Link>
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              display="flex"
-              alignItems="center"
-              noWrap
-              sx={{ flexGrow: 1, ml: 1 }}
-            ></Typography>
-            <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              {user?.photoURL ? (
-                <img
-                  src={user.photoURL}
-                  width="40px"
-                  style={{ borderRadius: "50%" }}
-                  alt="avatar"
-                />
-              ) : (
-                <AccountCircleIcon />
-              )}
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={menuOpen}
-              onClose={handleCloseMenu}
-            >
-              <MenuItem onClick={SignOut}>{"Sair"}</MenuItem>
-            </Menu>
-          </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" open={open}>
-          <Toolbar
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List component="nav">
-            <MainListItems />
-          </List>
-        </Drawer>
-        <Box
-          component="main"
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <AppBar
+        elevation={0}
+        sx={{
+          bgcolor: "white",
+          borderBottom: "1px solid #e0e0e0",
+        }}
+        position="fixed"
+        open={open}
+      >
+        <Toolbar
           sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            flexGrow: 1,
-            height: "100vh",
-            overflow: "auto",
+            pr: "24px",
+            pl: "-10px",
           }}
         >
-          <Toolbar />
-          <main>{children ? children : null}</main>
-        </Box>
-      </Box>
-    </ThemeProvider>
+          <IconButton
+            edge="start"
+            color="primary"
+            aria-label="open drawer"
+            onClick={toggleDrawer}
+          >
+            {open ? <ChevronLeftIcon /> : <MenuIcon />}
+          </IconButton>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            id="composition-button"
+            aria-controls={open ? "composition-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
+            startDecorator={
+              <Avatar
+                variant="plain"
+                size="sm"
+                alt="Avatar"
+                color="soft"
+                src={user?.photoURL}
+              />
+            }
+            sx={{
+              "--Button-gap": "10px",
+            }}
+          >
+            <Typography level="body1" color="white">
+              {user?.displayName}
+            </Typography>
+          </Button>
+          <Popup
+            role={undefined}
+            id="composition-menu"
+            open={openMenu}
+            anchorEl={anchorEl}
+            disablePortal
+            modifiers={[
+              {
+                name: "offset",
+                options: {
+                  offset: [0, 4],
+                },
+              },
+            ]}
+          >
+            <ClickAwayListener onClickAway={handleClose}>
+              <MenuList
+                variant="outlined"
+                onKeyDown={handleListKeyDown}
+                sx={{ boxShadow: "md", bgcolor: "background.body" }}
+              >
+                <MenuItem onClick={SignOut}>
+                  <ListItemDecorator>
+                    <LogoutIcon />
+                  </ListItemDecorator>
+                  Logout
+                </MenuItem>
+              </MenuList>
+            </ClickAwayListener>
+          </Popup>
+        </Toolbar>
+      </AppBar>
+      <Drawer
+        variant="persistent"
+        anchor="left"
+        open={open}
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: drawerWidth,
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        <Toolbar
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: "white",
+            px: [1],
+          }}
+        >
+          <RenderLink to="/home" src={Icon} width="130px" alt="Logo Icon" />
+        </Toolbar>
+        <Divider />
+        <List component="nav">
+          <Typography level="body3" sx={{ ml: 2, mt: 3, mb: 2 }}>
+            Navegação
+          </Typography>
+          <MainListItems />
+        </List>
+      </Drawer>
+      <Main
+        sx={{
+          backgroundColor: (theme) =>
+            theme.palette.mode === "light"
+              ? theme.palette.grey[100]
+              : theme.palette.grey[900],
+          flexGrow: 1,
+          height: "100vh",
+          overflow: "auto",
+        }}
+      >
+        <Toolbar />
+        <main>{children ? children : null}</main>
+      </Main>
+    </Box>
   );
 }
 

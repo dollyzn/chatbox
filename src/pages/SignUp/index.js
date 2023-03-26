@@ -20,7 +20,7 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
-import loginIcon from "../../assets/icon.png";
+import loginIcon from "../../assets/toolbar.png";
 
 const SignUp = () => {
   const { SignUp, GoogleSign, signed } = useContext(AuthContext);
@@ -98,11 +98,11 @@ const SignUp = () => {
         >
           <img
             src={loginIcon}
-            width="150px"
+            width="300px"
             alt="Logo Icon"
             draggable="false"
           />
-          <Typography level="h2" sx={{ mb: 2 }}>
+          <Typography level="h2" sx={{ mt: 2, mb: 2 }}>
             Cadastre-se
           </Typography>
           <Box
@@ -143,6 +143,7 @@ const SignUp = () => {
                     id="email"
                     name="email"
                     autoComplete="email"
+                    placeholder="Email"
                     error={Boolean(formError.email)}
                   />
                   <FormHelperText sx={{ color: "#d3232f" }}>
@@ -164,6 +165,7 @@ const SignUp = () => {
                     type={showPassword ? "text" : "password"}
                     id="password"
                     autoComplete="new-password"
+                    placeholder="Senha"
                     error={Boolean(formError.password)}
                     endDecorator={
                       <IconButton

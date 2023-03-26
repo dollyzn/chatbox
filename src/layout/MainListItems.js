@@ -1,9 +1,15 @@
 import * as React from "react";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import AssistantIcon from "@mui/icons-material/Assistant";
+import {
+  ListItemContent,
+  ListItemDecorator,
+  ListItemButton,
+  ListItem,
+  List,
+} from "@mui/joy";
+import { SvgIcon } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import { ReactComponent as IconGPT } from "../assets/gpt.svg";
+import { ReactComponent as IconDialogFlow } from "../assets/dialogflow.svg";
 import { Link as RouterLink } from "react-router-dom";
 
 function ListItemLink(props) {
@@ -18,20 +24,31 @@ function ListItemLink(props) {
   );
 
   return (
-    <li>
-      <ListItemButton component={renderLink} className={className}>
-        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
-        <ListItemText primary={primary} />
-      </ListItemButton>
-    </li>
+    <List>
+      <ListItem>
+        <ListItemButton component={renderLink} className={className}>
+          {icon ? <ListItemDecorator>{icon}</ListItemDecorator> : null}
+          <ListItemContent>{primary}</ListItemContent>
+        </ListItemButton>
+      </ListItem>
+    </List>
   );
 }
 
 function MainListItems() {
   return (
     <React.Fragment>
-      <ListItemLink to="/home" primary="Dashboard" icon={<DashboardIcon />} />
-      <ListItemLink to="/chat" primary="Chat" icon={<AssistantIcon />} />
+      <ListItemLink to="/home" primary="Home" icon={<HomeIcon />} />
+      <ListItemLink
+        to="/chat"
+        primary="ChatGPT"
+        icon={<SvgIcon component={IconGPT} inheritViewBox></SvgIcon>}
+      />
+      <ListItemLink
+        to="/chat"
+        primary="Dialogflow"
+        icon={<SvgIcon component={IconDialogFlow} inheritViewBox></SvgIcon>}
+      />
     </React.Fragment>
   );
 }
