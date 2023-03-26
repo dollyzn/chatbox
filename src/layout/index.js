@@ -9,6 +9,7 @@ import {
   Box,
   CssBaseline,
   Drawer,
+  useMediaQuery,
 } from "@mui/material";
 import {
   Avatar,
@@ -25,6 +26,8 @@ import MainListItems from "./MainListItems";
 import PopperUnstyled from "@mui/base/PopperUnstyled";
 import ClickAwayListener from "@mui/base/ClickAwayListener";
 import MuiAppBar from "@mui/material/AppBar";
+
+import useIsMobile from "../hooks/isMobile";
 
 import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -75,8 +78,10 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
 );
 
 function LoggedInLayout({ children }) {
+  const isMobile = useIsMobile();
+  const Query = useMediaQuery("(max-width:1400px)");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(!Query);
 
   const openMenu = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -142,6 +147,9 @@ function LoggedInLayout({ children }) {
             color="primary"
             aria-label="open drawer"
             onClick={toggleDrawer}
+            sx={{
+              display: open && isMobile ? "none" : "block",
+            }}
           >
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
@@ -162,12 +170,14 @@ function LoggedInLayout({ children }) {
               />
             }
             sx={{
-              "--Button-gap": "10px",
+              "--Button-gap": isMobile ? "0px" : "10px",
             }}
           >
-            <Typography level="body1" color="white">
-              {user?.displayName}
-            </Typography>
+            {!isMobile && (
+              <Typography level="body1" color="white">
+                {user?.displayName}
+              </Typography>
+            )}
           </Button>
           <Popup
             role={undefined}
@@ -224,6 +234,18 @@ function LoggedInLayout({ children }) {
           }}
         >
           <RenderLink to="/home" src={Icon} width="130px" alt="Logo Icon" />
+          {isMobile && <Box flexGrow={1}></Box>}
+          <IconButton
+            edge="start"
+            color="primary"
+            aria-label="open drawer"
+            onClick={toggleDrawer}
+            sx={{
+              display: isMobile ? "block" : "none",
+            }}
+          >
+            {open ? <ChevronLeftIcon /> : <MenuIcon />}
+          </IconButton>
         </Toolbar>
         <Divider />
         <List component="nav">
