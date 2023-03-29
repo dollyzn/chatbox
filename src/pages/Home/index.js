@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/joy";
+import { Box, Typography, Button } from "@mui/joy";
 
 import useIsMobile from "../../hooks/isMobile";
 import TypeEffect from "../../components/TypeEffect";
@@ -9,10 +9,9 @@ function Home() {
   const isMobile = useIsMobile();
   return (
     <Box sx={{ display: "flex", mt: 5 }}>
-      <Typography level="h3" sx={{ maxWidth: "600px", ml: "15%", mr: "10%" }}>
-        A inteligência artificial é a chave para
+      <Box sx={{ maxWidth: "600px", minWidth: "600px", ml: "15%", mr: "10%" }}>
         <TypeEffect />
-      </Typography>
+      </Box>
 
       {!isMobile && (
         <img
@@ -22,6 +21,7 @@ function Home() {
             position: "fixed",
             marginLeft: "1000px",
           }}
+          alt="AI"
           draggable="false"
         />
       )}

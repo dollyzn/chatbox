@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/joy";
 import "../../App.css";
 
+const staticPhrase = "A inteligência artificial é a chave para";
+
 const phrases = [
   "oferecer uma experiência de chatbot aprimorada e mais humana.",
   "permitir que o chatbot responda às perguntas com mais rapidez e precisão.",
@@ -20,9 +22,15 @@ const TypeEffect = () => {
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [typingSpeed, setTypingSpeed] = useState(100);
+  const [staticText, setStaticText] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      if (staticText !== staticPhrase) {
+        setStaticText(staticPhrase.substring(0, staticText.length + 1));
+        return;
+      }
+
       const currentIndex = index % phrases.length;
       const currentPhrase = phrases[currentIndex];
 
@@ -43,12 +51,11 @@ const TypeEffect = () => {
     }, typingSpeed);
 
     return () => clearTimeout(timer);
-  }, [index, text, isDeleting, typingSpeed]);
+  }, [index, text, isDeleting, typingSpeed, staticText]);
 
   return (
     <Typography level="h3" className="TypeEffect">
-      {" "}
-      {text}
+      {staticText} {staticText === staticPhrase && text}
       <span className="cursor" />
     </Typography>
   );

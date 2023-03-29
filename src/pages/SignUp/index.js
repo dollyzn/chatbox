@@ -15,6 +15,7 @@ import {
   FormHelperText,
   Typography,
   Link,
+  Sheet,
 } from "@mui/joy";
 
 import Visibility from "@mui/icons-material/Visibility";
@@ -88,131 +89,149 @@ const SignUp = () => {
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <Box
+        <Sheet
           sx={{
-            marginTop: 10,
+            width: 500,
+            mx: "auto",
+            my: 10,
+            py: 3,
+            px: 2,
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            gap: 2,
+            borderRadius: "sm",
+            boxShadow: "md",
           }}
+          variant="outlined"
         >
-          <img
-            src={loginIcon}
-            width="300px"
-            alt="Logo Icon"
-            draggable="false"
-          />
-          <Typography level="h2" sx={{ mt: 2, mb: 2 }}>
-            Cadastre-se
-          </Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <FormControl>
-                  <FormLabel sx={{ color: formError.name ? "#d3232f" : "" }}>
-                    Nome
-                  </FormLabel>
-                  <Input
-                    fullWidth
-                    size="lg"
-                    autoComplete="given-name"
-                    name="name"
-                    id="name"
-                    error={Boolean(formError.name)}
-                    placeholder="Nome"
-                    autoFocus
-                  />
-                  <FormHelperText sx={{ color: "#d3232f" }}>
-                    {formError.name ? formError.name : ""}
-                  </FormHelperText>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl>
-                  <FormLabel sx={{ color: formError.email ? "#d3232f" : "" }}>
-                    Email
-                  </FormLabel>
-                  <Input
-                    fullWidth
-                    size="lg"
-                    id="email"
-                    name="email"
-                    autoComplete="email"
-                    placeholder="Email"
-                    error={Boolean(formError.email)}
-                  />
-                  <FormHelperText sx={{ color: "#d3232f" }}>
-                    {formError.email ? formError.email : ""}
-                  </FormHelperText>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl>
-                  <FormLabel
-                    sx={{ color: formError.password ? "#d3232f" : "" }}
-                  >
-                    Senha
-                  </FormLabel>
-                  <Input
-                    fullWidth
-                    size="lg"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    autoComplete="new-password"
-                    placeholder="Senha"
-                    error={Boolean(formError.password)}
-                    endDecorator={
-                      <IconButton
-                        variant="plain"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    }
-                  />
-                  <FormHelperText sx={{ color: "#d3232f" }}>
-                    {formError.password ? formError.password : ""}
-                  </FormHelperText>
-                </FormControl>
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="solid"
-              sx={{ mt: 2, mb: 2 }}
+          <Box>
+            <Box
+              sx={{
+                textAlign: "center",
+              }}
             >
-              Cadastrar
-            </Button>
-            <Button
-              loading={loading}
-              loadingPosition="start"
-              variant="outlined"
-              fullWidth
-              sx={{ mb: 2 }}
-              onClick={handleGoogleSignIn}
-              startDecorator={<GoogleIcon />}
+              <img
+                src={loginIcon}
+                width="250px"
+                alt="Logo Icon"
+                draggable="false"
+              />
+            </Box>
+            <Box sx={{ mt: 2, mb: 2 }}>
+              <Typography level="h3" component="h1">
+                <b>Bem vindo!</b>
+              </Typography>
+              <Typography level="body2">Cadastre-se para continuar.</Typography>
+            </Box>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 3 }}
             >
-              Entrar com o Google
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item xs>
-                <RenderLink
-                  to="/login"
-                  level="body2"
-                  underline="hover"
-                  text="Já possui uma conta? Entre!"
-                ></RenderLink>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <FormControl>
+                    <FormLabel sx={{ color: formError.name ? "#d3232f" : "" }}>
+                      Nome
+                    </FormLabel>
+                    <Input
+                      fullWidth
+                      size="lg"
+                      autoComplete="given-name"
+                      name="name"
+                      id="name"
+                      error={Boolean(formError.name)}
+                      placeholder="Natã Santos"
+                      autoFocus
+                    />
+                    <FormHelperText sx={{ color: "#d3232f" }}>
+                      {formError.name ? formError.name : ""}
+                    </FormHelperText>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl>
+                    <FormLabel sx={{ color: formError.email ? "#d3232f" : "" }}>
+                      Email
+                    </FormLabel>
+                    <Input
+                      fullWidth
+                      size="lg"
+                      id="email"
+                      name="email"
+                      autoComplete="email"
+                      placeholder="email@exemplo.com"
+                      error={Boolean(formError.email)}
+                    />
+                    <FormHelperText sx={{ color: "#d3232f" }}>
+                      {formError.email ? formError.email : ""}
+                    </FormHelperText>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl>
+                    <FormLabel
+                      sx={{ color: formError.password ? "#d3232f" : "" }}
+                    >
+                      Senha
+                    </FormLabel>
+                    <Input
+                      fullWidth
+                      size="lg"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      autoComplete="new-password"
+                      placeholder="•••••••"
+                      error={Boolean(formError.password)}
+                      endDecorator={
+                        <IconButton
+                          variant="plain"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      }
+                    />
+                    <FormHelperText sx={{ color: "#d3232f" }}>
+                      {formError.password ? formError.password : ""}
+                    </FormHelperText>
+                  </FormControl>
+                </Grid>
               </Grid>
-            </Grid>
+              <Button
+                type="submit"
+                fullWidth
+                variant="solid"
+                sx={{ mt: 2, mb: 2 }}
+              >
+                Cadastrar
+              </Button>
+              <Button
+                loading={loading}
+                loadingPosition="start"
+                variant="outlined"
+                fullWidth
+                sx={{ mb: 2 }}
+                onClick={handleGoogleSignIn}
+                startDecorator={<GoogleIcon />}
+              >
+                Entrar com o Google
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item xs>
+                  <RenderLink
+                    to="/login"
+                    level="body2"
+                    underline="hover"
+                    text="Já possui uma conta? Entre!"
+                  ></RenderLink>
+                </Grid>
+              </Grid>
+            </Box>
           </Box>
-        </Box>
+        </Sheet>
       </Container>
     );
   }
