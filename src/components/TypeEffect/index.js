@@ -2,19 +2,25 @@ import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/joy";
 import "../../App.css";
 
-const staticPhrase = "A inteligência artificial é a chave para";
+const staticPhrase =
+  "Inteligência Artificial, a capacidade de uma máquina reproduzir a inteligência humana e";
 
 const phrases = [
-  "oferecer uma experiência de chatbot aprimorada e mais humana.",
-  "permitir que o chatbot responda às perguntas com mais rapidez e precisão.",
-  "personalizar a experiência do usuário, oferecendo soluções sob medida.",
-  "entender melhor as necessidades dos usuários e fornecer soluções mais eficazes.",
-  "automatizar tarefas repetitivas, permitindo que as equipes se concentrem em projetos mais complexos.",
-  "aumentar a eficiência do atendimento ao cliente, reduzindo o tempo de espera.",
-  "aprimorar o reconhecimento de voz e processamento de linguagem natural para melhor interação.",
-  "tornar a experiência do usuário mais intuitiva e fácil de usar.",
-  "permitir que o chatbot resolva problemas comuns e rotineiros de forma eficiente.",
-  "possibilitar uma maior personalização de produtos e serviços com base no histórico de interações do usuário.",
+  "tomar decisões complexas com base em dados e algoritmos.",
+  "realizar tarefas de forma autônoma, sem intervenção humana.",
+  "aprender continuamente, melhorando seu desempenho ao longo do tempo.",
+  "analisar grandes quantidades de dados em tempo real.",
+  "prever comportamentos e resultados futuros com precisão.",
+  "criar novos conhecimentos a partir da análise de dados.",
+  "detectar anomalias e padrões ocultos em grandes conjuntos de dados.",
+  "se adaptar a diferentes situações e ambientes.",
+  "se comunicar com seres humanos por meio de linguagem natural.",
+  "reconhecer imagens e objetos em tempo real.",
+  "identificar tendências e padrões em dados de mercado.",
+  "personalizar experiências de usuário com base em dados de comportamento.",
+  "desenvolver sistemas autônomos para tarefas específicas.",
+  "melhorar a eficiência e reduzir os custos em vários setores.",
+  "ser uma ferramenta poderosa para resolver problemas complexos.",
 ];
 
 const TypeEffect = () => {
@@ -54,7 +60,7 @@ const TypeEffect = () => {
   }, [index, text, isDeleting, typingSpeed, staticText]);
 
   return (
-    <Typography level="h3" className="TypeEffect">
+    <Typography level="h4" className="TypeEffect">
       {staticText} {staticText === staticPhrase && text}
       <span className="cursor" />
     </Typography>
