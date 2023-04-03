@@ -1,11 +1,10 @@
-import Box from "@mui/material/Box";
 import { useContext } from "react";
 import { AuthContext } from "../../context";
 import { Button, TextField } from "@mui/material";
 import { db } from "../../config/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-export const ChatBox = () => {
+function ChatsInput() {
   const { user } = useContext(AuthContext);
 
   const handleSubmit = (event) => {
@@ -29,28 +28,7 @@ export const ChatBox = () => {
       console.error("Error adding document: ", e);
     }
   }
-  return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{
-        bgcolor: "cyan",
-        minHeight: "80vh",
-        display: "flex",
-        alignItems: "end",
-        flexWrap: "wrap",
-        justifyContent: "flex-start",
-      }}
-    >
-      <TextField
-        name="message"
-        label="Mensagem"
-        id="message"
-        sx={{ width: "700px" }}
-      />
-      <Button type="submit" variant="contained">
-        Enviar
-      </Button>
-    </Box>
-  );
-};
+  return <div style={{ backgroundColor: "blue", height: "100%" }}>Input</div>;
+}
+
+export default ChatsInput;

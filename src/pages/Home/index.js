@@ -38,14 +38,14 @@ function Home() {
   };
 
   const cardVariants = {
-    visible: { opacity: 1, y: 0 },
-    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, x: 0 },
+    hidden: { opacity: 0, x: 30 },
   };
 
   const firstName = user?.displayName.split(" ")[0];
 
   function RenderLink(props) {
-    const { to, variant, size, icon, fullWidth } = props;
+    const { to, variant, size, icon } = props;
 
     const renderLink = React.useMemo(
       () =>
@@ -56,12 +56,7 @@ function Home() {
     );
 
     return (
-      <IconButton
-        component={renderLink}
-        variant={variant}
-        size={size}
-        fullWidth={fullWidth}
-      >
+      <IconButton component={renderLink} variant={variant} size={size}>
         {icon}
       </IconButton>
     );
@@ -69,10 +64,10 @@ function Home() {
 
   return (
     <Box sx={{ display: "flex", mt: 5 }}>
-      <Box sx={{ maxWidth: "600px", minWidth: "40%", ml: "15%", mr: "10%" }}>
+      <Box sx={{ maxWidth: "600px", minWidth: "40%", ml: "15%", mr: "15%" }}>
         <Card
           variant="outlined"
-          sx={{ maxWidth: 600, height: "85vh", zIndex: 1 }}
+          sx={{ maxWidth: 600, minHeight: "85vh", height: "100%", zIndex: 1 }}
         >
           <Box
             sx={{
@@ -112,6 +107,16 @@ function Home() {
           </Box>
           <Divider sx={{ mt: 2, mb: 3 }} />
           <TypeEffect />
+          {/* <IconButton
+            aria-label="Show card"
+            variant="plain"
+            onClick={() => {
+              setShowCard(!showCard);
+              setHovered(!hovered);
+            }}
+          >
+            <ExpandLessIcon />
+          </IconButton>
           <motion.div
             initial={{ y: 0 }}
             animate={hovered ? "down" : "up"}
@@ -129,86 +134,7 @@ function Home() {
               bottom: 20,
               left: "49%",
             }}
-          >
-            <IconButton
-              aria-label="Show card"
-              onClick={() => {
-                setShowCard(!showCard);
-                setHovered(!hovered);
-              }}
-            >
-              <ExpandLessIcon />
-            </IconButton>
-          </motion.div>
-          <motion.div
-            initial="hidden"
-            animate={showCard ? "visible" : "hidden"}
-            variants={cardVariants}
-            transition={{ duration: 0.5 }}
-            style={{
-              position: "absolute",
-              bottom: 20,
-              left: "auto",
-              right: "auto",
-              width: "calc(100% - 31px)",
-              display: showCard ? "block" : "none",
-            }}
-          >
-            <Card
-              variant="outlined"
-              orientation="horizontal"
-              sx={{
-                gap: 2,
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
-                },
-              }}
-            >
-              <AspectRatio ratio="1" sx={{ width: 90 }}>
-                <img
-                  src="https://avatars.githubusercontent.com/u/66445721?v=4"
-                  srcSet="https://avatars.githubusercontent.com/u/66445721?v=4"
-                  loading="lazy"
-                  alt=""
-                />
-              </AspectRatio>
-              <div>
-                <Typography
-                  level="h2"
-                  fontSize="lg"
-                  id="card-description"
-                  mb={0.5}
-                >
-                  Natã Santos
-                </Typography>
-                <Typography
-                  fontSize="sm"
-                  aria-describedby="card-description"
-                  mb={1}
-                >
-                  <Link
-                    overlay
-                    underline="none"
-                    href="https://github.com/dollyzn"
-                    sx={{ color: "text.tertiary" }}
-                    rel="noopener"
-                    target="_blank"
-                  >
-                    Técnico Informática - IFF
-                  </Link>
-                </Typography>
-                <Chip
-                  variant="outlined"
-                  color="primary"
-                  size="sm"
-                  sx={{ pointerEvents: "none" }}
-                >
-                  Code, coffee, repeat.
-                </Chip>
-              </div>
-            </Card>
-          </motion.div>
+          ></motion.div> */}
         </Card>
       </Box>
       {!isMobile && (
@@ -222,6 +148,89 @@ function Home() {
           alt="AI"
           draggable="false"
         />
+      )}
+      {!isMobile && (
+        <motion.div
+          initial="hidden"
+          animate={showCard ? "hidden" : "visible"}
+          variants={cardVariants}
+          transition={{ duration: 0.3 }}
+          style={{
+            position: "absolute",
+            bottom: 20,
+            right: 30,
+            width: "300px",
+          }}
+        >
+          <Card
+            variant="outlined"
+            orientation="horizontal"
+            sx={{
+              gap: 2,
+              "&:hover": {
+                boxShadow: "md",
+                borderColor: "neutral.outlinedHoverBorder",
+              },
+              mb: 1,
+            }}
+            onClick={() => setShowCard(!showCard)}
+          >
+            <AspectRatio ratio="1" sx={{ width: 45 }}>
+              <img
+                src="https://avatars.githubusercontent.com/u/66445721?v=4"
+                srcSet="https://avatars.githubusercontent.com/u/66445721?v=4"
+                loading="lazy"
+                alt=""
+              />
+            </AspectRatio>
+            <div>
+              <Typography
+                level="h2"
+                fontSize="lg"
+                id="card-description"
+                mb={0.5}
+              >
+                Natã Santos
+              </Typography>
+              <Typography fontSize="sm" aria-describedby="card-description">
+                Técnico Informática - IFF
+              </Typography>
+            </div>
+          </Card>
+          <Card
+            variant="outlined"
+            orientation="horizontal"
+            sx={{
+              gap: 2,
+              "&:hover": {
+                boxShadow: "md",
+                borderColor: "neutral.outlinedHoverBorder",
+              },
+            }}
+          >
+            <AspectRatio ratio="1" sx={{ width: 45 }}>
+              <img
+                src="https://avatars.githubusercontent.com/u/66445721?v=4"
+                srcSet="https://avatars.githubusercontent.com/u/66445721?v=4"
+                loading="lazy"
+                alt=""
+              />
+            </AspectRatio>
+            <div>
+              <Typography
+                level="h2"
+                fontSize="lg"
+                id="card-description"
+                mb={0.5}
+              >
+                Gabrielly Chaim
+              </Typography>
+              <Typography fontSize="sm" aria-describedby="card-description">
+                Técnico Informática - IFF
+              </Typography>
+            </div>
+          </Card>
+        </motion.div>
       )}
     </Box>
   );
