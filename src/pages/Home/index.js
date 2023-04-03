@@ -3,8 +3,6 @@ import {
   Box,
   Typography,
   Card,
-  Link,
-  Chip,
   AspectRatio,
   IconButton,
   SvgIcon,
@@ -21,7 +19,6 @@ import TypeEffect from "../../components/TypeEffect";
 
 import { ReactComponent as IconGPT } from "../../assets/gpt.svg";
 import { ReactComponent as IconDialogFlow } from "../../assets/dialogflow.svg";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import Ia from "../../assets/ia.png";
 import { useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
@@ -29,13 +26,7 @@ import { Link as RouterLink } from "react-router-dom";
 function Home() {
   const { user } = useContext(AuthContext);
   const [showCard, setShowCard] = useState(false);
-  const [hovered, setHovered] = useState(false);
   const isMobile = useIsMobile();
-
-  const iconVariants = {
-    down: { y: -150, transition: { duration: 0.5 } },
-    up: { y: 0, transition: { duration: 0.5 } },
-  };
 
   const cardVariants = {
     visible: { opacity: 1, x: 0 },
@@ -64,7 +55,14 @@ function Home() {
 
   return (
     <Box sx={{ display: "flex", mt: 5 }}>
-      <Box sx={{ maxWidth: "600px", minWidth: "40%", ml: "15%", mr: "15%" }}>
+      <Box
+        sx={{
+          maxWidth: "600px",
+          minWidth: "40%",
+          ml: isMobile ? 2 : 20,
+          mr: 2,
+        }}
+      >
         <Card
           variant="outlined"
           sx={{ maxWidth: 600, minHeight: "85vh", height: "100%", zIndex: 1 }}
@@ -107,34 +105,6 @@ function Home() {
           </Box>
           <Divider sx={{ mt: 2, mb: 3 }} />
           <TypeEffect />
-          {/* <IconButton
-            aria-label="Show card"
-            variant="plain"
-            onClick={() => {
-              setShowCard(!showCard);
-              setHovered(!hovered);
-            }}
-          >
-            <ExpandLessIcon />
-          </IconButton>
-          <motion.div
-            initial={{ y: 0 }}
-            animate={hovered ? "down" : "up"}
-            transition={{
-              type: "spring",
-              stiffness: 50,
-              damping: 10,
-              yoyo: Infinity,
-            }}
-            variants={iconVariants}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            style={{
-              position: "absolute",
-              bottom: 20,
-              left: "49%",
-            }}
-          ></motion.div> */}
         </Card>
       </Box>
       {!isMobile && (
@@ -143,7 +113,7 @@ function Home() {
           style={{
             borderRadius: "500px",
             position: "fixed",
-            marginLeft: "1000px",
+            marginLeft: "50%",
           }}
           alt="AI"
           draggable="false"

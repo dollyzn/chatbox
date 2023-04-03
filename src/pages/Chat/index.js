@@ -1,12 +1,10 @@
 import { Box } from "@mui/joy";
 import ChatBody from "../../components/ChatBody";
-import ChatInput from "../../components/ChatInput";
 
 function Chat() {
   return (
-    <Box>
+    <Box sx={{ height: "100%" }}>
       <ChatBody></ChatBody>
-      <ChatInput></ChatInput>
     </Box>
   );
 }

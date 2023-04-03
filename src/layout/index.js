@@ -255,18 +255,17 @@ function LoggedInLayout({ children }) {
         </List>
       </Drawer>
       <Main
+        open={open}
         sx={{
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.grey[100]
-              : theme.palette.grey[900],
+          backgroundColor: "#F5F5F5",
           flexGrow: 1,
+          flex: 1,
           height: "100vh",
           overflow: "auto",
+          pt: { sm: "56px", md: "64px" },
         }}
       >
-        <Toolbar />
-        <main>{children ? children : null}</main>
+        {children ? children : null}
       </Main>
     </Box>
   );
