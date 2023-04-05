@@ -65,7 +65,13 @@ function Home() {
       >
         <Card
           variant="outlined"
-          sx={{ maxWidth: 600, minHeight: "85vh", height: "100%", zIndex: 1 }}
+          sx={{
+            maxWidth: 600,
+            minHeight: "85vh",
+            height: "100%",
+            zIndex: 1,
+            mt: isMobile ? 4 : 0,
+          }}
         >
           <Box
             sx={{

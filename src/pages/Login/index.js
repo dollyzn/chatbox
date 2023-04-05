@@ -90,10 +90,9 @@ const Login = () => {
         <CssBaseline />
         <Sheet
           sx={{
-            width: 500,
             mx: "auto",
             my: 10,
-            py: 4,
+            py: 5,
             px: 5,
             display: "flex",
             flexDirection: "column",
