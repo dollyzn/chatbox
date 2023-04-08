@@ -87,7 +87,7 @@ function Home() {
               <Badge badgeContent="!">
                 <RenderLink
                   variant="outlined"
-                  to="/chat"
+                  to="/chat/chatgpt"
                   icon={<SvgIcon component={IconGPT} inheritViewBox></SvgIcon>}
                   size="lg"
                   fullWidth
@@ -96,7 +96,7 @@ function Home() {
               <Badge badgeContent="!">
                 <RenderLink
                   variant="outlined"
-                  to="/chat"
+                  to="/chat/dialogflow"
                   icon={
                     <SvgIcon
                       component={IconDialogFlow}

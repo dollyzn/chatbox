@@ -40,12 +40,12 @@ function MainListItems() {
     <React.Fragment>
       <ListItemLink to="/home" primary="Home" icon={<HomeIcon />} />
       <ListItemLink
-        to="/chat"
+        to="/chat/chatgpt"
         primary="ChatGPT"
         icon={<SvgIcon component={IconGPT} inheritViewBox></SvgIcon>}
       />
       <ListItemLink
-        to="/chat"
+        to="/chat/dialogflow"
         primary="Dialogflow"
         icon={<SvgIcon component={IconDialogFlow} inheritViewBox></SvgIcon>}
       />

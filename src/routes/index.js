@@ -16,7 +16,7 @@ const AppRoutes = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/home" element={<PrivateRoute Item={Home} />} />
-          <Route path="/chat" element={<PrivateRoute Item={Chat} />} />
+          <Route path="/chat/:type" element={<PrivateRoute Item={Chat} />} />
         </Routes>
       </Fragment>
     </Router>

@@ -24,6 +24,16 @@
   animation-iteration-count: infinite;
 }
 
+.MessageCursor {
+  display: inline-block;
+  width: 2px;
+  height: 16px;
+  background-color: #333;
+  animation-name: cursor-blink-type;
+  animation-duration: 0.7s;
+  animation-iteration-count: infinite;
+}
+
 @keyframes cursor-blink-type {
   from,
   to {

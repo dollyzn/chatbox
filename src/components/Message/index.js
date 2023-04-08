@@ -39,7 +39,9 @@ const Message = ({ message, isUser }) => {
               ...messageStyle,
             }}
           >
-            <Typography level="body1">{message}</Typography>
+            <Typography level="body1" sx={{ whiteSpace: "pre-line" }}>
+              {message}
+            </Typography>
           </Box>
         </Box>
       </Box>
@@ -71,13 +73,11 @@ const messageContainerStyle = {
 };
 
 const userMessageStyle = {
-  maxWidth: "480px",
-  color: "black",
+  maxWidth: "700px",
 };
 
 const botMessageStyle = {
-  maxWidth: "480px",
-  color: "black",
+  maxWidth: "700px",
 };
 
 export default Message;

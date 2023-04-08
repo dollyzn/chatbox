@@ -1,27 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
-import { Input, Box, Typography, IconButton } from "@mui/joy";
+import { Box, Typography, IconButton, Textarea, Divider } from "@mui/joy";
 import Message from "../Message";
 import useIsMobile from "../../hooks/isMobile";
 import { Send } from "@mui/icons-material";
 import loginIcon from "../../assets/toolbar.png";
+import TypingMessage from "../TypingMessage";
 
 function ChatBody() {
+  const { type } = useParams();
+  const messagesRef = useRef(null);
   const [input, setInput] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const [chat, setChat] = useState([{}]);
+
+  const typingSpeed = 30;
 
   const isMobile = useIsMobile();
 
-  console.log(chat);
+  useEffect(() => {
+    handleScroll();
+  }, [chat]);
+
+  function handleScroll() {
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (input.trim() !== "") {
-      setChat([...chat, { message: `${input}`, isUser: true }]);
-
+      let newChat = [...chat, { message: `${input}`, isUser: true }];
+      setChat(newChat);
+      setDisabled(true);
       setInput("");
+      const response = await fetch("http://localhost:3001/chatgpt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: input }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+      const botMessage = { message: `${data.data.content}`, isUser: false };
+      setChat([
+        ...newChat,
+        {
+          message: (
+            <TypingMessage
+              message={botMessage.message}
+              typingSpeed={typingSpeed}
+            />
+          ),
+          isUser: false,
+        },
+      ]);
+      setTimeout(() => {
+        setChat([...newChat, botMessage]);
+        handleScroll();
+        setDisabled(false);
+      }, botMessage.message.length * typingSpeed);
     }
   }
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
 
   return (
     <Box
@@ -44,7 +95,9 @@ function ChatBody() {
           },
           scrollbarWidth: "thin",
           scrollbarColor: "#ccc transparent",
+          scrollBehavior: "smooth",
         }}
+        ref={messagesRef}
       >
         {chat.length === 1 ? (
           <Box
@@ -79,17 +132,21 @@ function ChatBody() {
           })
         )}
       </Box>
+      <Divider />
       <Box sx={{ px: 2, py: 1 }}>
         <form onSubmit={(e) => handleSubmit(e)}>
-          <Input
+          <Textarea
             placeholder="Digite sua mensagem"
             size="lg"
             value={input}
+            disabled={disabled}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e)}
             endDecorator={
               <IconButton
                 disabled={!Boolean(input)}
                 onClick={(e) => handleSubmit(e)}
+                sx={{ position: "absolute", right: 5, bottom: 10 }}
               >
                 <Send />
               </IconButton>
