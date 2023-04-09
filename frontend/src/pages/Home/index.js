@@ -33,7 +33,7 @@ function Home() {
     hidden: { opacity: 0, x: 30 },
   };
 
-  const firstName = user?.displayName.split(" ")[0];
+  const firstName = user?.providerData[0].displayName.split(" ")[0];
 
   function RenderLink(props) {
     const { to, variant, size, icon } = props;

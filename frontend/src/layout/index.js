@@ -165,7 +165,7 @@ function LoggedInLayout({ children }) {
                 size="sm"
                 alt="Avatar"
                 color="soft"
-                src={user?.photoURL}
+                src={user?.providerData[0].photoURL}
               />
             }
             sx={{
@@ -174,7 +174,7 @@ function LoggedInLayout({ children }) {
           >
             {!isMobile && (
               <Typography level="body1" color="white">
-                {user?.displayName}
+                {user?.providerData[0].displayName}
               </Typography>
             )}
           </Button>

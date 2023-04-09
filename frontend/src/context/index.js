@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       setSigned(true);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", user.accessToken);
+      localStorage.setItem("token", user.stsTokenManager.accessToken);
       toast.success("Usuário autenticado com sucesso!", {
         position: "top-right",
         autoClose: 3000,
@@ -91,7 +91,7 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       setSigned(true);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", user.accessToken);
+      localStorage.setItem("token", user.stsTokenManager.accessToken);
       toast.success("Usuário autenticado com sucesso!", {
         position: "top-right",
         autoClose: 3000,
@@ -128,7 +128,7 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       setSigned(true);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", user.accessToken);
+      localStorage.setItem("token", user.stsTokenManager.accessToken);
       toast.success("Usuário autenticado com sucesso!", {
         position: "top-right",
         autoClose: 3000,
