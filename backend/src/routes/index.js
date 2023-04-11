@@ -1,11 +1,11 @@
-import { Router } from "express";
+const express = require("express");
 
-import chatgptRouter from "./chatgpt";
-import dialogflowRouter from "./dialogflow";
+const chatgptRouter = require("./chatgpt");
+const dialogflowRouter = require("./dialogflow");
 
-const routes = Router();
+const routes = express.Router();
 
 routes.use(chatgptRouter);
 routes.use(dialogflowRouter);
 
-export default routes;
+module.exports = routes;

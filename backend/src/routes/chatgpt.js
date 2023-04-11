@@ -1,5 +1,13 @@
 const express = require("express");
-const openai = require("openai");
+require("dotenv").config();
+const { Configuration, OpenAIApi } = require("openai");
+
+const configuration = new Configuration({
+  organization: process.env.OPENAI_ORGANIZATION,
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+const openai = new OpenAIApi(configuration);
 
 const chatgptRouter = express.Router();
 
@@ -18,10 +26,10 @@ chatgptRouter.post("/chatgpt", async (req, res) => {
 
     console.log(text);
 
-    res.json({ data: text });
+    return res.status(200).json({ data: text });
   } catch (err) {
     console.error(err);
-    res
+    return res
       .status(500)
       .send({ erro: "Ocorreu um erro ao processar a requisição." });
   }
