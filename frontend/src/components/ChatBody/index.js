@@ -6,7 +6,8 @@ import Message from "../Message";
 import useIsMobile from "../../hooks/isMobile";
 import { Send } from "@mui/icons-material";
 import loginIcon from "../../assets/toolbar.png";
-import TypingMessage from "../TypingMessage";
+import TypingMessage from "../TypingMessageEffect";
+import api from "../../services/api";
 
 function ChatBody() {
   const { type } = useParams();
@@ -15,6 +16,7 @@ function ChatBody() {
   const [disabled, setDisabled] = useState(false);
   const [chat, setChat] = useState([{}]);
 
+  console.log(type);
   const typingSpeed = 30;
 
   const isMobile = useIsMobile();
@@ -36,15 +38,12 @@ function ChatBody() {
       setChat(newChat);
       setDisabled(true);
       setInput("");
-      const response = await fetch("http://localhost:3001/chatgpt", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: input }),
+
+      const response = await api.post("/chatgpt", {
+        queryText: input,
       });
 
-      const data = await response.json();
+      const data = await response.data;
       console.log(data);
       const botMessage = { message: `${data.data.content}`, isUser: false };
       setChat([

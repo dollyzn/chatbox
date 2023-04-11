@@ -15,7 +15,7 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../../context";
 
 import useIsMobile from "../../hooks/isMobile";
-import TypeEffect from "../../components/TypeEffect";
+import TypeEffect from "../../components/TypingHomeEffect";
 
 import { ReactComponent as IconGPT } from "../../assets/gpt.svg";
 import { ReactComponent as IconDialogFlow } from "../../assets/dialogflow.svg";
