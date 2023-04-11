@@ -1,21 +1,26 @@
 const express = require("express");
 const dialogflow = require("@google-cloud/dialogflow");
 
-const CREDENTIALS = JSON.parse(process.env.CREDENTIALS);
+if (
+  !process.env.DIALOGFLOW_PROJECT_ID ||
+  !process.env.DIALOGFLOW_PRIVATE_KEY ||
+  !process.env.DIALOGFLOW_CLIENT_EMAIL
+)
+  throw "Please, configure credentials in the env variables";
 
-const PROJECID = CREDENTIALS.project_id;
+const projectId = process.env.DIALOGFLOW_PROJECT_ID;
 
-const CONFIGURATION = {
+const config = {
   credentials: {
-    private_key: CREDENTIALS.private_key,
-    client_email: CREDENTIALS.client_email,
+    private_key: process.env.DIALOGFLOW_PRIVATE_KEY,
+    client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
   },
 };
 
-const sessionClient = new dialogflow.SessionsClient(CONFIGURATION);
+const sessionClient = new dialogflow.SessionsClient(config);
 
 const detectIntent = async (languageCode, queryText, sessionId) => {
-  let sessionPath = sessionClient.projectAgentSessionPath(PROJECID, sessionId);
+  let sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
 
   let request = {
     session: sessionPath,
@@ -38,15 +43,17 @@ const detectIntent = async (languageCode, queryText, sessionId) => {
 const dialogflowRouter = express.Router();
 
 dialogflowRouter.post("/dialogflow", async (req, res) => {
-  const languageCode = req.body.languageCode;
-  const queryText = req.body.queryText;
-  const sessionId = req.body.sessionId;
+  const { languageCode, queryText, sessionId } = req.body;
 
-  const text = await detectIntent(languageCode, queryText, sessionId);
+  try {
+    const message = await detectIntent(languageCode, queryText, sessionId);
 
-  console.log(text);
-
-  return res.status(200).json({ data: text });
+    return res.status(200).json({ data: message });
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ erro: "Ocorreu um erro ao processar a requisição." });
+  }
 });
 
 module.exports = dialogflowRouter;
