@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -8,6 +9,8 @@ import {
   signOut,
   signInWithPopup,
 } from "firebase/auth";
+
+import Cookies from "js-cookie";
 
 import BackdropLoading from "../components/BackdropLoading";
 
@@ -21,6 +24,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
+    const teste = JSON.parse(Cookies.get("user"));
+    console.log(teste);
     const loadingStoreData = async () => {
       let userJSON = JSON.parse(user);
       if (token && userJSON) {
@@ -36,6 +41,7 @@ export const AuthProvider = ({ children }) => {
 
   const Login = async (email, password) => {
     setLoading(true);
+
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -44,21 +50,51 @@ export const AuthProvider = ({ children }) => {
       );
 
       const user = userCredential.user;
-      setUser(user);
-      setSigned(true);
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", user.stsTokenManager.accessToken);
-      toast.success("Usuário autenticado com sucesso!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      setLoading(false);
+
+      try {
+        await setDoc(doc(db, "users", user.uid), {
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        });
+
+        Cookies.set(
+          "user",
+          JSON.stringify({
+            uid: user.uid,
+            token: user.accessToken,
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+          })
+        );
+        setUser(user);
+        setSigned(true);
+        toast.success("Usuário autenticado com sucesso!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setLoading(false);
+      } catch (error) {
+        const errorMessage = error.message;
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setLoading(false);
+      }
     } catch (error) {
       const errorMessage = error.message;
       toast.error(errorMessage, {
@@ -86,23 +122,41 @@ export const AuthProvider = ({ children }) => {
 
       const user = userCredential.user;
 
-      await updateProfile(user, { displayName: name });
+      try {
+        await updateProfile(user, { displayName: name });
+        await setDoc(doc(db, "users", user.uid), {
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        });
 
-      setUser(user);
-      setSigned(true);
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", user.stsTokenManager.accessToken);
-      toast.success("Usuário autenticado com sucesso!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      setLoading(false);
+        setUser(user);
+        setSigned(true);
+        toast.success("Usuário autenticado com sucesso!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setLoading(false);
+      } catch (error) {
+        const errorMessage = error.message;
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setLoading(false);
+      }
     } catch (error) {
       const errorMessage = error.message;
       toast.error(errorMessage, {
@@ -125,20 +179,40 @@ export const AuthProvider = ({ children }) => {
 
       const user = userCredential.user;
 
-      setUser(user);
-      setSigned(true);
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", user.stsTokenManager.accessToken);
-      toast.success("Usuário autenticado com sucesso!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      try {
+        await setDoc(doc(db, "users", user.uid), {
+          name: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+        });
+
+        setUser(user);
+        setSigned(true);
+        toast.success("Usuário autenticado com sucesso!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setLoading(false);
+      } catch (error) {
+        const errorMessage = error.message;
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setLoading(false);
+      }
     } catch (error) {
       const errorMessage = error.message;
       toast.error(errorMessage, {
