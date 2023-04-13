@@ -22,13 +22,14 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    const teste = JSON.parse(Cookies.get("user"));
-    console.log(teste);
+    const user = Cookies.get("user");
+    let userJSON;
+    if (user) {
+      userJSON = JSON.parse(user);
+    }
     const loadingStoreData = async () => {
-      let userJSON = JSON.parse(user);
-      if (token && userJSON) {
+      if (userJSON) {
+        //TODO USER TOKEN VERIFICATION WITH BACKEND ENDPOINT
         setUser(userJSON);
         setSigned(true);
       }
