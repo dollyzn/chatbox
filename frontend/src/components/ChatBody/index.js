@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 
 import { Box, Typography, IconButton, Textarea, Divider } from "@mui/joy";
@@ -8,15 +8,16 @@ import { Send } from "@mui/icons-material";
 import loginIcon from "../../assets/toolbar.png";
 import TypingMessage from "../TypingMessageEffect";
 import api from "../../services/api";
+import { AuthContext } from "../../context";
 
 function ChatBody() {
+  const { user } = useContext(AuthContext);
   const { type } = useParams();
   const messagesRef = useRef(null);
   const [input, setInput] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [chat, setChat] = useState([{}]);
 
-  console.log(type);
   const typingSpeed = 30;
 
   const isMobile = useIsMobile();
@@ -33,36 +34,108 @@ function ChatBody() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (input.trim() !== "") {
-      let newChat = [...chat, { message: `${input}`, isUser: true }];
-      setChat(newChat);
-      setDisabled(true);
-      setInput("");
+    switch (type) {
+      case "chatgpt":
+        if (input.trim() !== "") {
+          let newChat = [...chat, { message: `${input}`, isUser: true }];
+          setChat(newChat);
+          setDisabled(true);
+          setInput("");
 
-      const response = await api.post("/chatgpt", {
-        queryText: input,
-      });
+          const response = await api.post("/chatgpt", {
+            token: user.token,
+            queryText: input,
+          });
 
-      const data = await response.data;
-      console.log(data);
-      const botMessage = { message: `${data.data.content}`, isUser: false };
-      setChat([
-        ...newChat,
-        {
-          message: (
-            <TypingMessage
-              message={botMessage.message}
-              typingSpeed={typingSpeed}
-            />
-          ),
-          isUser: false,
-        },
-      ]);
-      setTimeout(() => {
-        setChat([...newChat, botMessage]);
-        handleScroll();
-        setDisabled(false);
-      }, botMessage.message.length * typingSpeed);
+          const data = response.data;
+          const botMessage = { message: `${data.data.content}`, isUser: false };
+          setChat([
+            ...newChat,
+            {
+              message: (
+                <TypingMessage
+                  message={botMessage.message}
+                  typingSpeed={typingSpeed}
+                />
+              ),
+              isUser: false,
+            },
+          ]);
+          setTimeout(() => {
+            setChat([...newChat, botMessage]);
+            handleScroll();
+            setDisabled(false);
+          }, botMessage.message.length * typingSpeed);
+        }
+        break;
+      case "dialogflow":
+        if (input.trim() !== "") {
+          let newChat = [...chat, { message: `${input}`, isUser: true }];
+          setChat(newChat);
+          setDisabled(true);
+          setInput("");
+
+          const response = await api.post("/dialogflow", {
+            token: user.token,
+            languageCode: "pt-BR",
+            queryText: input,
+            sessionId: `${user?.uid}`,
+          });
+
+          const data = response.data;
+          const botMessage = {
+            message: `${data.data.response}`,
+            isUser: false,
+          };
+          setChat([
+            ...newChat,
+            {
+              message: (
+                <TypingMessage
+                  message={botMessage.message}
+                  typingSpeed={typingSpeed}
+                />
+              ),
+              isUser: false,
+            },
+          ]);
+          setTimeout(() => {
+            setChat([...newChat, botMessage]);
+            handleScroll();
+            setDisabled(false);
+          }, botMessage.message.length * typingSpeed);
+        }
+        break;
+      default:
+        if (input.trim() !== "") {
+          let newChat = [...chat, { message: `${input}`, isUser: true }];
+          setChat(newChat);
+          setDisabled(true);
+          setInput("");
+
+          const botMessage = {
+            message:
+              "🤔 A sua URL está com algum parâmetro não reconhecido. Para continuar selecione novamente o tipo de chat desejado.",
+            isUser: false,
+          };
+          setChat([
+            ...newChat,
+            {
+              message: (
+                <TypingMessage
+                  message={botMessage.message}
+                  typingSpeed={typingSpeed}
+                />
+              ),
+              isUser: false,
+            },
+          ]);
+          setTimeout(() => {
+            setChat([...newChat, botMessage]);
+            handleScroll();
+            setDisabled(false);
+          }, botMessage.message.length * typingSpeed);
+        }
     }
   }
 
