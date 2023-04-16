@@ -1,19 +1,20 @@
 const express = require("express");
 const dialogflow = require("@google-cloud/dialogflow");
+const serviceAccount = require(`${process.env.DIALOGFLOW_CREDENTIALS_FILE_PATH}`);
 
 if (
-  !process.env.DIALOGFLOW_PROJECT_ID ||
-  !process.env.DIALOGFLOW_PRIVATE_KEY ||
-  !process.env.DIALOGFLOW_CLIENT_EMAIL
+  !serviceAccount.project_id ||
+  !serviceAccount.private_key ||
+  !serviceAccount.client_email
 )
-  throw "Please, configure credentials in the env variables";
+  throw "Please, verify your service account path in .env or service account file format";
 
-const projectId = process.env.DIALOGFLOW_PROJECT_ID;
+const projectId = serviceAccount.project_id;
 
 const config = {
   credentials: {
-    private_key: process.env.DIALOGFLOW_PRIVATE_KEY,
-    client_email: process.env.DIALOGFLOW_CLIENT_EMAIL,
+    private_key: serviceAccount.private_key,
+    client_email: serviceAccount.client_email,
   },
 };
 

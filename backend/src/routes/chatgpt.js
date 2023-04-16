@@ -12,9 +12,10 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
+const isAuth = require("../middleware/isAuth");
 const chatgptRouter = express.Router();
 
-chatgptRouter.post("/chatgpt", async (req, res) => {
+chatgptRouter.post("/chatgpt", isAuth, async (req, res) => {
   const { queryText } = req.body;
 
   try {
