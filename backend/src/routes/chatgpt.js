@@ -32,7 +32,7 @@ chatgptRouter.post("/chatgpt", isAuth, async (req, res) => {
   } catch (err) {
     return res
       .status(500)
-      .send({ erro: "Ocorreu um erro ao processar a requisição." });
+      .json({ erro: "Ocorreu um erro ao processar a requisição." });
   }
 });
 
