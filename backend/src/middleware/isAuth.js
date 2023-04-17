@@ -1,6 +1,8 @@
 const admin = require("firebase-admin");
+const CryptoJS = require("crypto-js");
 
 const serviceAccount = require(`${process.env.FIREBASE_CREDENTIALS_FILE_PATH}`);
+const cryptoKey = process.env.CRYPTO_KEY;
 
 if (!process.env.FIREBASE_CREDENTIALS_FILE_PATH) {
   throw "Please, verify your service account path in .env or service account file format";
@@ -11,10 +13,17 @@ admin.initializeApp({
 });
 
 const isAuth = async (req, res, next) => {
-  const token = req.body.token;
+  const encryptedCookie = req.cookies.user;
+
+  const decryptedUserJSON = CryptoJS.AES.decrypt(
+    encryptedCookie,
+    cryptoKey
+  ).toString(CryptoJS.enc.Utf8);
+
+  const user = JSON.parse(decryptedUserJSON);
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    const decodedToken = await admin.auth().verifyIdToken(user.token);
 
     req.user = decodedToken;
 

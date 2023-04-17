@@ -21,7 +21,7 @@ chatgptRouter.post("/chatgpt", isAuth, async (req, res) => {
   try {
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      max_tokens: 150,
+      max_tokens: 500,
       temperature: 0.5,
       messages: [{ role: "user", content: queryText }],
     });
