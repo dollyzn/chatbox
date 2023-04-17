@@ -4,7 +4,6 @@ import {
   ListItemDecorator,
   ListItemButton,
   ListItem,
-  List,
 } from "@mui/joy";
 import { SvgIcon } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
@@ -24,14 +23,12 @@ function ListItemLink(props) {
   );
 
   return (
-    <List>
-      <ListItem>
-        <ListItemButton component={renderLink} className={className}>
-          {icon ? <ListItemDecorator>{icon}</ListItemDecorator> : null}
-          <ListItemContent>{primary}</ListItemContent>
-        </ListItemButton>
-      </ListItem>
-    </List>
+    <ListItem>
+      <ListItemButton component={renderLink} className={className}>
+        {icon ? <ListItemDecorator>{icon}</ListItemDecorator> : null}
+        <ListItemContent>{primary}</ListItemContent>
+      </ListItemButton>
+    </ListItem>
   );
 }
 

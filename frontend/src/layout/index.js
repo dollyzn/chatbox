@@ -1,18 +1,14 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../context";
 import { Link as RouterLink } from "react-router-dom";
-
+import { Toolbar, Drawer, styled, AppBar as MuiAppBar } from "@mui/material";
+import { PopperUnstyled, ClickAwayListener } from "@mui/base";
 import {
-  Divider,
-  List,
-  Toolbar,
-  Box,
   CssBaseline,
-  Drawer,
-  useMediaQuery,
-} from "@mui/material";
-import {
+  Box,
+  List,
   Avatar,
+  Divider,
   IconButton,
   Button,
   Link,
@@ -21,11 +17,9 @@ import {
   MenuItem,
   ListItemDecorator,
 } from "@mui/joy";
-import { styled } from "@mui/material/styles";
+
 import MainListItems from "./MainListItems";
-import PopperUnstyled from "@mui/base/PopperUnstyled";
-import ClickAwayListener from "@mui/base/ClickAwayListener";
-import MuiAppBar from "@mui/material/AppBar";
+import BackdropLoading from "../components/BackdropLoading";
 
 import useIsMobile from "../hooks/isMobile";
 
@@ -65,7 +59,6 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: `-${drawerWidth}px`,
     ...(open && {
       transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.easeOut,
@@ -77,10 +70,11 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
 );
 
 function LoggedInLayout({ children }) {
-  const isMobile = useIsMobile();
-  const Query = useMediaQuery("(max-width:1400px)");
+  const { SignOut, user, loading } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = useState(!Query);
+  const [open, setOpen] = useState(false);
+
+  const isMobile = useIsMobile();
 
   const openMenu = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -99,7 +93,9 @@ function LoggedInLayout({ children }) {
     }
   };
 
-  const { SignOut, user } = useContext(AuthContext);
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
 
   function RenderLink(props) {
     const { to, src, width, alt } = props;
@@ -119,9 +115,9 @@ function LoggedInLayout({ children }) {
     );
   }
 
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  if (loading) {
+    return <BackdropLoading />;
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -165,7 +161,7 @@ function LoggedInLayout({ children }) {
                 size="sm"
                 alt="Avatar"
                 color="soft"
-                src={user?.providerData[0].photoURL}
+                src={user?.photoURL}
               />
             }
             sx={{
@@ -174,7 +170,7 @@ function LoggedInLayout({ children }) {
           >
             {!isMobile && (
               <Typography level="body1" color="white">
-                {user?.providerData[0].displayName}
+                {user?.name}
               </Typography>
             )}
           </Button>
@@ -199,7 +195,12 @@ function LoggedInLayout({ children }) {
                 onKeyDown={handleListKeyDown}
                 sx={{ boxShadow: "md", bgcolor: "background.body" }}
               >
-                <MenuItem onClick={SignOut}>
+                <MenuItem
+                  onClick={() => {
+                    setAnchorEl(null);
+                    SignOut();
+                  }}
+                >
                   <ListItemDecorator>
                     <LogoutIcon />
                   </ListItemDecorator>
@@ -211,9 +212,10 @@ function LoggedInLayout({ children }) {
         </Toolbar>
       </AppBar>
       <Drawer
-        variant="persistent"
+        variant="temporary"
         anchor="left"
         open={open}
+        onClick={toggleDrawer}
         sx={{
           width: drawerWidth,
           flexShrink: 0,
