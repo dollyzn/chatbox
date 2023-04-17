@@ -3,6 +3,8 @@ import { Divider, Typography, Avatar, Box } from "@mui/joy";
 import useIsMobile from "../../hooks/isMobile";
 import { AuthContext } from "../../context";
 
+import botIcon from "../../assets/bot2.jpg";
+
 const Message = ({ message, isUser }) => {
   const { user } = useContext(AuthContext);
   const messageStyle = isUser ? userMessageStyle : botMessageStyle;
@@ -23,12 +25,8 @@ const Message = ({ message, isUser }) => {
         >
           <Avatar
             alt="Avatar"
-            size="sm"
-            src={
-              isUser
-                ? user?.photoURL
-                : "https://image.winudf.com/v2/image1/ZGV2X2ltYWdlXzE4MjcwOTUzXzE2MzU1OV8yMDIyMTIyMzA5MDYwNTA3NQ/icon.png?fakeurl=1&h=240&type=webp"
-            }
+            size="md"
+            src={isUser ? user?.photoURL : botIcon}
             sx={{
               mt: 1,
             }}
@@ -58,7 +56,7 @@ const userContainerStyle = {
 };
 
 const botContainerStyle = {
-  backgroundColor: "#ddf1ff",
+  backgroundColor: "#addbff",
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
