@@ -34,6 +34,7 @@ function ChatBody() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    let message;
     switch (type) {
       case "chatgpt":
         if (input.trim() !== "") {
@@ -42,13 +43,21 @@ function ChatBody() {
           setDisabled(true);
           setInput("");
 
-          const response = await api.post("/chatgpt", {
-            token: user.token,
-            queryText: input,
-          });
+          try {
+            const response = await api.post("/chatgpt", {
+              token: user.token,
+              queryText: input,
+            });
 
-          const data = response.data;
-          const botMessage = { message: `${data.data.content}`, isUser: false };
+            message = response.data.data.content;
+          } catch (error) {
+            console.error(error);
+            message =
+              "Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.";
+          }
+
+          console.log(message);
+          const botMessage = { message: `${message}`, isUser: false };
           setChat([
             ...newChat,
             {
@@ -75,16 +84,23 @@ function ChatBody() {
           setDisabled(true);
           setInput("");
 
-          const response = await api.post("/dialogflow", {
-            token: user.token,
-            languageCode: "pt-BR",
-            queryText: input,
-            sessionId: `${user?.uid}`,
-          });
+          try {
+            const response = await api.post("/dialogflow", {
+              token: user.token,
+              languageCode: "pt-BR",
+              queryText: input,
+              sessionId: `${user?.uid}`,
+            });
 
-          const data = response.data;
+            message = response.data.data.response;
+          } catch (error) {
+            console.error(error);
+            message =
+              "Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.";
+          }
+
           const botMessage = {
-            message: `${data.data.response}`,
+            message: `${message}`,
             isUser: false,
           };
           setChat([
