@@ -1,7 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { auth, db } from "../config/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { getErrorMessage } from "../errors";
+import { auth } from "../config/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
@@ -10,9 +10,10 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 
+import CryptoJS from "crypto-js";
 import Cookies from "js-cookie";
 
-import BackdropLoading from "../components/BackdropLoading";
+import api from "../services/api";
 
 export const AuthContext = createContext();
 
@@ -20,28 +21,114 @@ export const AuthProvider = ({ children }) => {
   const [signed, setSigned] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loginLoading, setLoginLoading] = useState(false);
 
   useEffect(() => {
-    const user = Cookies.get("user");
-    let userJSON;
-    if (user) {
-      userJSON = JSON.parse(user);
-    }
-    const loadingStoreData = async () => {
-      if (userJSON) {
-        //TODO USER TOKEN VERIFICATION WITH BACKEND ENDPOINT
-        setUser(userJSON);
-        setSigned(true);
+    const user = Cookies.get("user") ? Cookies.get("user") : null;
+    const loadUserData = async () => {
+      if (user) {
+        try {
+          const cryptoKey = process.env.REACT_APP_CRYPTO_KEY;
+          const decryptedUserJSON = CryptoJS.AES.decrypt(
+            user,
+            cryptoKey
+          ).toString(CryptoJS.enc.Utf8);
+
+          const userJSON = JSON.parse(decryptedUserJSON);
+
+          const response = await api.post("/auth");
+
+          const data = response.data;
+
+          if (
+            response.status === 200 &&
+            userJSON.uid === data.user.uid &&
+            userJSON.email === data.user.email
+          ) {
+            setUser(userJSON);
+            setSigned(true);
+          } else {
+            setUser(null);
+            setSigned(false);
+            Cookies.remove("user");
+            console.error("Usuário inválido");
+          }
+        } catch (error) {
+          setUser(null);
+          setSigned(false);
+          Cookies.remove("user");
+          console.error("Ocorreu um erro: " + error);
+        }
       }
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+      setLoading(false);
     };
-    loadingStoreData();
+    loadUserData();
   }, []);
 
-  const Login = async (email, password) => {
-    setLoading(true);
+  const handleSuccess = (user) => {
+    const userJSON = JSON.stringify(user);
+    const cryptoKey = process.env.REACT_APP_CRYPTO_KEY;
+    const encryptedUser = CryptoJS.AES.encrypt(userJSON, cryptoKey).toString();
+    Cookies.set("user", encryptedUser, { expires: 1 });
+    setUser(user);
+    setSigned(true);
+    setLoginLoading(false);
+
+    toast.success("Usuário autenticado com sucesso!", {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
+  const handleError = (error, emailRef, passwordRef, setFormError) => {
+    const errorMessage = getErrorMessage(error);
+    setLoginLoading(false);
+
+    switch (error.code) {
+      case "auth/wrong-password":
+        setFormError({
+          [passwordRef.current.firstChild.name]: errorMessage,
+        });
+        break;
+      case "auth/email-already-in-use":
+        setFormError({
+          [emailRef.current.firstChild.name]: errorMessage,
+        });
+        break;
+      case "auth/user-not-found":
+        setFormError({
+          [emailRef.current.firstChild.name]: errorMessage,
+        });
+        break;
+      default:
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        break;
+    }
+  };
+
+  const Login = async (
+    email,
+    password,
+    emailRef,
+    passwordRef,
+    setFormError
+  ) => {
+    setLoginLoading(true);
 
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -50,70 +137,29 @@ export const AuthProvider = ({ children }) => {
         password
       );
 
-      const user = userCredential.user;
+      const user = {
+        uid: userCredential.user.uid,
+        token: userCredential.user.accessToken,
+        name: userCredential.user.displayName,
+        email: userCredential.user.email,
+        photoURL: userCredential.user.photoURL,
+      };
 
-      try {
-        await setDoc(doc(db, "users", user.uid), {
-          name: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-        });
-
-        Cookies.set(
-          "user",
-          JSON.stringify({
-            uid: user.uid,
-            token: user.accessToken,
-            displayName: user.displayName,
-            email: user.email,
-            photoURL: user.photoURL,
-          })
-        );
-        setUser(user);
-        setSigned(true);
-        toast.success("Usuário autenticado com sucesso!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
-      } catch (error) {
-        const errorMessage = error.message;
-        toast.error(errorMessage, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
-      }
+      handleSuccess(user);
     } catch (error) {
-      const errorMessage = error.message;
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      setLoading(false);
+      handleError(error, emailRef, passwordRef, setFormError);
     }
   };
 
-  const SignUp = async (name, email, password) => {
-    setLoading(true);
+  const SignUp = async (
+    name,
+    email,
+    password,
+    emailRef,
+    passwordRef,
+    setFormError
+  ) => {
+    setLoginLoading(true);
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -121,124 +167,56 @@ export const AuthProvider = ({ children }) => {
         password
       );
 
-      const user = userCredential.user;
-
       try {
-        await updateProfile(user, { displayName: name });
-        await setDoc(doc(db, "users", user.uid), {
-          name: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-        });
+        await updateProfile(userCredential.user, { displayName: name });
 
-        setUser(user);
-        setSigned(true);
-        toast.success("Usuário autenticado com sucesso!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
+        const user = {
+          uid: userCredential.user.uid,
+          token: userCredential.user.accessToken,
+          name: userCredential.user.displayName,
+          email: userCredential.user.email,
+          photoURL: userCredential.user.photoURL,
+        };
+
+        handleSuccess(user);
       } catch (error) {
-        const errorMessage = error.message;
-        toast.error(errorMessage, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
+        handleError(error, emailRef, passwordRef, setFormError);
       }
     } catch (error) {
-      const errorMessage = error.message;
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      setLoading(false);
+      handleError(error, emailRef, passwordRef, setFormError);
     }
   };
 
   const GoogleSign = async (auth, provider) => {
+    setLoginLoading(true);
     try {
       const userCredential = await signInWithPopup(auth, provider);
 
-      const user = userCredential.user;
+      const user = {
+        uid: userCredential.user.uid,
+        token: userCredential.user.accessToken,
+        name: userCredential.user.displayName,
+        email: userCredential.user.email,
+        photoURL: userCredential.user.photoURL,
+      };
 
-      try {
-        await setDoc(doc(db, "users", user.uid), {
-          name: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-        });
-
-        setUser(user);
-        setSigned(true);
-        toast.success("Usuário autenticado com sucesso!", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
-      } catch (error) {
-        const errorMessage = error.message;
-        toast.error(errorMessage, {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-        setLoading(false);
-      }
+      handleSuccess(user);
     } catch (error) {
-      const errorMessage = error.message;
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
+      handleError(error);
     }
   };
 
   const SignOut = async () => {
     setLoading(true);
     try {
-      signOut(auth);
+      await signOut(auth);
+      Cookies.remove("user");
       setUser(null);
       setSigned(false);
-      localStorage.clear();
+      setLoading(false);
       toast.warn("Usuário desconectado", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -246,26 +224,10 @@ export const AuthProvider = ({ children }) => {
         progress: undefined,
         theme: "light",
       });
-      setLoading(false);
     } catch (error) {
-      const errorMessage = error.message;
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      setLoading(false);
+      handleError(error);
     }
   };
-
-  if (loading) {
-    return <BackdropLoading />;
-  }
 
   return (
     <AuthContext.Provider
@@ -273,6 +235,7 @@ export const AuthProvider = ({ children }) => {
         user,
         signed,
         loading,
+        loginLoading,
         Login,
         SignUp,
         SignOut,
