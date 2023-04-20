@@ -13,7 +13,7 @@ import {
 
 import { motion } from "framer-motion";
 
-import { AuthContext } from "../../context";
+import { AuthContext } from "../../context/AuthContext";
 
 import useIsMobile from "../../hooks/isMobile";
 import TypeEffect from "../../components/TypingHomeEffect";

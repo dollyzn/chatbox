@@ -8,7 +8,7 @@ import { Send } from "@mui/icons-material";
 import loginIcon from "../../assets/toolbar.png";
 import TypingMessage from "../TypingMessageEffect";
 import api from "../../services/api";
-import { AuthContext } from "../../context";
+import { AuthContext } from "../../context/AuthContext";
 
 function ChatBody() {
   const { user } = useContext(AuthContext);

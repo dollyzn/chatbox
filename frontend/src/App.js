@@ -1,6 +1,6 @@
 import React from "react";
 import { ToastContainer } from "react-toastify";
-import { AuthProvider } from "./context";
+import { AuthProvider } from "./context/AuthContext";
 
 import AppRoutes from "./routes";
 

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { AuthContext } from "../context";
+import { AuthContext } from "../context/AuthContext";
 import LoggedInLayout from "../layout";
 
 import BackdropLoading from "../components/BackdropLoading";

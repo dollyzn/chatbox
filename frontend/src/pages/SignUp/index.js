@@ -1,7 +1,7 @@
 import React, { useContext, useState, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { auth, provider } from "../../config/firebase";
-import { AuthContext } from "../../context";
+import { AuthContext } from "../../context/AuthContext";
 import { Link as RouterLink } from "react-router-dom";
 import { motion, useDragControls } from "framer-motion";
 import * as Yup from "yup";
