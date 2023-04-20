@@ -31,17 +31,15 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         api.defaults.headers.Authorization = `Bearer ${user}`;
         try {
-          const cryptoKey = process.env.REACT_APP_CRYPTO_KEY;
-          const decryptedUserJSON = CryptoJS.AES.decrypt(
-            user,
-            cryptoKey
-          ).toString(CryptoJS.enc.Utf8);
+          const decryptedUserJSON = encryptAndDecryptToken(user, true);
           const prevUser = JSON.parse(decryptedUserJSON);
 
           const response = await api.post("/auth");
-          const data = response.data;
 
-          const userCredential = await signInWithCustomToken(auth, data.token);
+          const userCredential = await signInWithCustomToken(
+            auth,
+            response.data.token
+          );
 
           const customTokenUser = {
             uid: userCredential.user.uid,
@@ -50,7 +48,7 @@ export const AuthProvider = ({ children }) => {
             email: userCredential.user.email,
             photoURL: userCredential.user.photoURL,
           };
-          console.log(prevUser);
+
           console.log(customTokenUser);
 
           if (
@@ -58,8 +56,7 @@ export const AuthProvider = ({ children }) => {
             prevUser.uid === customTokenUser.uid &&
             prevUser.email === customTokenUser.email
           ) {
-            setUser(customTokenUser);
-            setSigned(true);
+            handleSuccess(customTokenUser);
           } else {
             setUser(null);
             setSigned(false);
@@ -80,13 +77,64 @@ export const AuthProvider = ({ children }) => {
     loadUserData();
   }, []);
 
-  const handleSuccess = (user) => {
-    const userJSON = JSON.stringify(user);
+  const refreshAuthToken = async () => {
+    try {
+      const response = await api.post("/auth");
+
+      const userCredential = await signInWithCustomToken(
+        auth,
+        response.data.token
+      );
+
+      const customTokenUser = {
+        uid: userCredential.user.uid,
+        token: userCredential.user.accessToken,
+        name: userCredential.user.displayName,
+        email: userCredential.user.email,
+        photoURL: userCredential.user.photoURL,
+      };
+
+      const encryptedUser = encryptAndDecryptToken(
+        JSON.stringify(customTokenUser),
+        false
+      );
+
+      api.defaults.headers.Authorization = `Bearer ${encryptedUser}`;
+      localStorage.setItem("token", encryptedUser);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  setInterval(refreshAuthToken, 3300000);
+
+  const encryptAndDecryptToken = (token, isEncrypt = true) => {
     const cryptoKey = process.env.REACT_APP_CRYPTO_KEY;
-    const encryptedUser = CryptoJS.AES.encrypt(userJSON, cryptoKey).toString();
+
+    try {
+      const encryptedToken = CryptoJS.AES.encrypt(
+        JSON.stringify(token),
+        cryptoKey
+      ).toString();
+
+      if (isEncrypt) {
+        const decryptedToken = CryptoJS.AES.decrypt(token, cryptoKey).toString(
+          CryptoJS.enc.Utf8
+        );
+
+        return decryptedToken;
+      } else {
+        return encryptedToken;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  };
+
+  const handleSuccess = (user) => {
+    const encryptedUser = encryptAndDecryptToken(JSON.stringify(user), false);
     api.defaults.headers.Authorization = `Bearer ${encryptedUser}`;
     localStorage.setItem("token", encryptedUser);
-    // Cookies.set("user", encryptedUser, { expires: 1 });
 
     setUser(user);
     setSigned(true);

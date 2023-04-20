@@ -13,15 +13,15 @@ admin.initializeApp({
 });
 
 const isAuth = async (req, res, next) => {
-  const encryptedCookie = req.headers.authorization.split(" ")[1];
+  const encryptedToken = req.headers.authorization.split(" ")[1];
 
   try {
-    const decryptedUserJSON = CryptoJS.AES.decrypt(
-      encryptedCookie,
+    const decryptedTokenJSON = CryptoJS.AES.decrypt(
+      encryptedToken,
       cryptoKey
     ).toString(CryptoJS.enc.Utf8);
 
-    const user = JSON.parse(decryptedUserJSON);
+    const user = JSON.parse(decryptedTokenJSON);
 
     const decodedToken = await admin.auth().verifyIdToken(user.token);
 

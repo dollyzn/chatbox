@@ -11,7 +11,8 @@ authRouter.post("/auth", isAuth, async (req, res) => {
 
     res.status(200).json({ token: customToken });
   } catch (error) {
-    res.status(500).json({ erro: error });
+    console.error(error);
+    res.status(500).json({ erro: "Internal server error" });
   }
 });
 
