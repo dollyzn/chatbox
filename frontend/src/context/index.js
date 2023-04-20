@@ -8,6 +8,7 @@ import {
   updateProfile,
   signOut,
   signInWithPopup,
+  signInWithCustomToken,
 } from "firebase/auth";
 
 import CryptoJS from "crypto-js";
@@ -24,39 +25,53 @@ export const AuthProvider = ({ children }) => {
   const [loginLoading, setLoginLoading] = useState(false);
 
   useEffect(() => {
-    const user = Cookies.get("user") ? Cookies.get("user") : null;
+    const user = localStorage.getItem("token") ?? null;
+    // const user = Cookies.get("user") ? Cookies.get("user") : null;
     const loadUserData = async () => {
       if (user) {
+        api.defaults.headers.Authorization = `Bearer ${user}`;
         try {
           const cryptoKey = process.env.REACT_APP_CRYPTO_KEY;
           const decryptedUserJSON = CryptoJS.AES.decrypt(
             user,
             cryptoKey
           ).toString(CryptoJS.enc.Utf8);
-
-          const userJSON = JSON.parse(decryptedUserJSON);
+          const prevUser = JSON.parse(decryptedUserJSON);
 
           const response = await api.post("/auth");
-
           const data = response.data;
+
+          const userCredential = await signInWithCustomToken(auth, data.token);
+
+          const customTokenUser = {
+            uid: userCredential.user.uid,
+            token: userCredential.user.accessToken,
+            name: userCredential.user.displayName,
+            email: userCredential.user.email,
+            photoURL: userCredential.user.photoURL,
+          };
+          console.log(prevUser);
+          console.log(customTokenUser);
 
           if (
             response.status === 200 &&
-            userJSON.uid === data.user.uid &&
-            userJSON.email === data.user.email
+            prevUser.uid === customTokenUser.uid &&
+            prevUser.email === customTokenUser.email
           ) {
-            setUser(userJSON);
+            setUser(customTokenUser);
             setSigned(true);
           } else {
             setUser(null);
             setSigned(false);
-            Cookies.remove("user");
+            localStorage.removeItem("token");
+            // Cookies.remove("user");
             console.error("Usuário inválido");
           }
         } catch (error) {
           setUser(null);
           setSigned(false);
-          Cookies.remove("user");
+          localStorage.removeItem("token");
+          // Cookies.remove("user");
           console.error("Ocorreu um erro: " + error);
         }
       }
@@ -69,7 +84,10 @@ export const AuthProvider = ({ children }) => {
     const userJSON = JSON.stringify(user);
     const cryptoKey = process.env.REACT_APP_CRYPTO_KEY;
     const encryptedUser = CryptoJS.AES.encrypt(userJSON, cryptoKey).toString();
-    Cookies.set("user", encryptedUser, { expires: 1 });
+    api.defaults.headers.Authorization = `Bearer ${encryptedUser}`;
+    localStorage.setItem("token", encryptedUser);
+    // Cookies.set("user", encryptedUser, { expires: 1 });
+
     setUser(user);
     setSigned(true);
     setLoginLoading(false);
@@ -210,7 +228,8 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       await signOut(auth);
-      Cookies.remove("user");
+      localStorage.removeItem("token");
+      // Cookies.remove("user");
       setUser(null);
       setSigned(false);
       setLoading(false);

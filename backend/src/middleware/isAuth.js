@@ -13,7 +13,7 @@ admin.initializeApp({
 });
 
 const isAuth = async (req, res, next) => {
-  const encryptedCookie = req.cookies.user;
+  const encryptedCookie = req.headers.authorization.split(" ")[1];
 
   try {
     const decryptedUserJSON = CryptoJS.AES.decrypt(
