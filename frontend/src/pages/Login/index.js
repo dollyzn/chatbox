@@ -241,7 +241,6 @@ const Login = () => {
                 </Button>
                 <Button
                   loading={loginLoading}
-                  loadingPosition="start"
                   variant="outlined"
                   fullWidth
                   sx={{ mb: 2 }}
