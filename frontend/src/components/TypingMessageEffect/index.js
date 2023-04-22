@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import PropTypes from "prop-types";
 import { Typography } from "@mui/joy";
 import "../../App.css";
 
-const TypingMessage = ({ message, typingSpeed }) => {
+const TypingMessage = ({ message, typingSpeed, messageRef }) => {
   const [text, setText] = useState("");
+  const [isAtLimit, setIsAtLimit] = useState(false);
+  const [prevHeight, setprevHeight] = useState(null);
+
+  const testRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -14,8 +18,26 @@ const TypingMessage = ({ message, typingSpeed }) => {
     return () => clearTimeout(timer);
   }, [message, text, typingSpeed]);
 
+  useLayoutEffect(() => {
+    setIsAtLimit(
+      messageRef.current.scrollTop + messageRef.current.clientHeight ===
+        messageRef.current.scrollHeight
+    );
+
+    const element = testRef.current;
+    const rect = element.getBoundingClientRect();
+
+    if (rect.height !== prevHeight) {
+      if (isAtLimit) {
+        messageRef.current.scrollTop = messageRef.current.scrollHeight;
+      }
+    }
+
+    setprevHeight(rect.height);
+  }, [text]);
+
   return (
-    <Typography level="body1" sx={{ whiteSpace: "pre-line" }}>
+    <Typography ref={testRef} level="body1" sx={{ whiteSpace: "pre-line" }}>
       {text}
       <span className="MessageCursor" />
     </Typography>

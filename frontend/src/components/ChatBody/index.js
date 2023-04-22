@@ -1,10 +1,16 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 
-import { Box, Typography, IconButton, Textarea, Divider } from "@mui/joy";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Textarea,
+  CircularProgress,
+} from "@mui/joy";
 import Message from "../Message";
 import useIsMobile from "../../hooks/isMobile";
-import { Send } from "@mui/icons-material";
+import { Send, South } from "@mui/icons-material";
 import loginIcon from "../../assets/toolbar.png";
 import TypingMessage from "../TypingMessageEffect";
 import api from "../../services/api";
@@ -17,143 +23,159 @@ function ChatBody() {
   const [input, setInput] = useState("");
   const [disabled, setDisabled] = useState(false);
   const [chat, setChat] = useState([{}]);
+  const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
 
   const typingSpeed = 30;
 
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    handleScroll();
+    if (chat[chat.length - 1].isUser || isScrolledToBottom) {
+      handleScroll();
+    }
   }, [chat]);
 
-  function handleScroll() {
+  const handleScroll = () => {
     if (messagesRef.current) {
       messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
     }
-  }
+  };
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    let message;
-    switch (type) {
-      case "chatgpt":
-        if (input.trim() !== "") {
-          let newChat = [...chat, { message: `${input}`, isUser: true }];
-          setChat(newChat);
-          setDisabled(true);
-          setInput("");
-
-          try {
-            const response = await api.post("/chatgpt", {
-              token: user.token,
-              queryText: input,
-            });
-
-            message = response.data.data.content;
-          } catch (error) {
-            console.error(error);
-            message =
-              "Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.";
-          }
-
-          console.log(message);
-          const botMessage = { message: `${message}`, isUser: false };
-          setChat([
-            ...newChat,
-            {
-              message: (
-                <TypingMessage
-                  message={botMessage.message}
-                  typingSpeed={typingSpeed}
-                />
-              ),
-              isUser: false,
-            },
-          ]);
-          setTimeout(() => {
-            setChat([...newChat, botMessage]);
-            handleScroll();
-            setDisabled(false);
-          }, botMessage.message.length * typingSpeed);
-        }
-        break;
-      case "dialogflow":
-        if (input.trim() !== "") {
-          let newChat = [...chat, { message: `${input}`, isUser: true }];
-          setChat(newChat);
-          setDisabled(true);
-          setInput("");
-
-          try {
-            const response = await api.post("/dialogflow", {
-              token: user.token,
-              languageCode: "pt-BR",
-              queryText: input,
-              sessionId: `${user?.uid}`,
-            });
-
-            message = response.data.data.response;
-          } catch (error) {
-            console.error(error);
-            message =
-              "Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.";
-          }
-
-          const botMessage = {
-            message: `${message}`,
-            isUser: false,
-          };
-          setChat([
-            ...newChat,
-            {
-              message: (
-                <TypingMessage
-                  message={botMessage.message}
-                  typingSpeed={typingSpeed}
-                />
-              ),
-              isUser: false,
-            },
-          ]);
-          setTimeout(() => {
-            setChat([...newChat, botMessage]);
-            handleScroll();
-            setDisabled(false);
-          }, botMessage.message.length * typingSpeed);
-        }
-        break;
-      default:
-        if (input.trim() !== "") {
-          let newChat = [...chat, { message: `${input}`, isUser: true }];
-          setChat(newChat);
-          setDisabled(true);
-          setInput("");
-
-          const botMessage = {
-            message:
-              "🤔 A sua URL está com algum parâmetro não reconhecido. Para continuar selecione novamente o tipo de chat desejado.",
-            isUser: false,
-          };
-          setChat([
-            ...newChat,
-            {
-              message: (
-                <TypingMessage
-                  message={botMessage.message}
-                  typingSpeed={typingSpeed}
-                />
-              ),
-              isUser: false,
-            },
-          ]);
-          setTimeout(() => {
-            setChat([...newChat, botMessage]);
-            handleScroll();
-            setDisabled(false);
-          }, botMessage.message.length * typingSpeed);
-        }
+  const checkIsScrolledToBottom = () => {
+    const container = messagesRef.current;
+    if (
+      container.scrollTop + container.clientHeight >=
+      container.scrollHeight - 100
+    ) {
+      setIsScrolledToBottom(true);
+    } else {
+      setIsScrolledToBottom(false);
     }
-  }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!disabled) {
+      let message;
+      switch (type) {
+        case "chatgpt":
+          if (input.trim() !== "") {
+            let newChat = [...chat, { message: `${input}`, isUser: true }];
+            setChat(newChat);
+            setDisabled(true);
+            setInput("");
+
+            try {
+              const response = await api.post("/chatgpt", {
+                token: user.token,
+                queryText: input,
+              });
+
+              message = response.data.data.content;
+            } catch (error) {
+              console.error(error);
+              message =
+                "Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.";
+            }
+
+            const botMessage = { message: `${message}`, isUser: false };
+            setChat([
+              ...newChat,
+              {
+                message: (
+                  <TypingMessage
+                    message={botMessage.message}
+                    typingSpeed={typingSpeed}
+                    messageRef={messagesRef}
+                  />
+                ),
+                isUser: false,
+              },
+            ]);
+            setTimeout(() => {
+              setChat([...newChat, botMessage]);
+              setDisabled(false);
+            }, botMessage.message.length * typingSpeed + 200);
+          }
+          break;
+        case "dialogflow":
+          if (input.trim() !== "") {
+            let newChat = [...chat, { message: `${input}`, isUser: true }];
+            setChat(newChat);
+            setDisabled(true);
+            setInput("");
+
+            try {
+              const response = await api.post("/dialogflow", {
+                token: user.token,
+                languageCode: "pt-BR",
+                queryText: input,
+                sessionId: `${user?.uid}`,
+              });
+
+              message = response.data.data.response;
+            } catch (error) {
+              console.error(error);
+              message =
+                "Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.";
+            }
+
+            const botMessage = {
+              message: `${message}`,
+              isUser: false,
+            };
+            setChat([
+              ...newChat,
+              {
+                message: (
+                  <TypingMessage
+                    message={botMessage.message}
+                    typingSpeed={typingSpeed}
+                    messageRef={messagesRef}
+                  />
+                ),
+                isUser: false,
+              },
+            ]);
+            setTimeout(() => {
+              setChat([...newChat, botMessage]);
+              setDisabled(false);
+            }, botMessage.message.length * typingSpeed + 200);
+          }
+          break;
+        default:
+          if (input.trim() !== "") {
+            let newChat = [...chat, { message: `${input}`, isUser: true }];
+            setChat(newChat);
+            setDisabled(true);
+            setInput("");
+
+            const botMessage = {
+              message:
+                "🤔 A sua URL está com algum parâmetro não reconhecido. Para continuar selecione novamente o tipo de chat desejado.",
+              isUser: false,
+            };
+            setChat([
+              ...newChat,
+              {
+                message: (
+                  <TypingMessage
+                    message={botMessage.message}
+                    typingSpeed={typingSpeed}
+                    messageRef={messagesRef}
+                  />
+                ),
+                isUser: false,
+              },
+            ]);
+            setTimeout(() => {
+              setChat([...newChat, botMessage]);
+              setDisabled(false);
+            }, botMessage.message.length * typingSpeed + 200);
+          }
+      }
+    }
+  };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -184,8 +206,10 @@ function ChatBody() {
           scrollbarWidth: "thin",
           scrollbarColor: "#ccc transparent",
           scrollBehavior: "smooth",
+          pb: 5,
         }}
         ref={messagesRef}
+        onScroll={checkIsScrolledToBottom}
       >
         {chat.length === 1 ? (
           <Box
@@ -219,24 +243,44 @@ function ChatBody() {
             );
           })
         )}
+        <IconButton
+          sx={{
+            position: "absolute",
+            bottom: 120,
+            right: 15,
+            display: isScrolledToBottom ? "none" : "block",
+          }}
+          onClick={handleScroll}
+        >
+          <South />
+        </IconButton>
       </Box>
-      <Divider />
-      <Box sx={{ px: 2, py: 1 }}>
+      <Box
+        sx={{
+          px: 2,
+          pb: 1,
+          pt: 3,
+        }}
+      >
         <form onSubmit={(e) => handleSubmit(e)}>
           <Textarea
             placeholder="Digite sua mensagem"
             size="lg"
             value={input}
-            disabled={disabled}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => handleKeyDown(e)}
             endDecorator={
               <IconButton
                 disabled={!Boolean(input)}
+                variant="plain"
                 onClick={(e) => handleSubmit(e)}
                 sx={{ position: "absolute", right: 5, bottom: 10 }}
               >
-                <Send />
+                {disabled ? (
+                  <CircularProgress variant="soft" size="sm" />
+                ) : (
+                  <Send />
+                )}
               </IconButton>
             }
             sx={{ mx: "auto", maxWidth: "1000px" }}
