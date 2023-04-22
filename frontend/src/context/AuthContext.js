@@ -12,10 +12,8 @@ import {
 } from "firebase/auth";
 
 import CryptoJS from "crypto-js";
-import Cookies from "js-cookie";
 
 import api from "../services/api";
-
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -26,7 +24,6 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const user = localStorage.getItem("token") ?? null;
-    // const user = Cookies.get("user") ? Cookies.get("user") : null;
     const loadUserData = async () => {
       if (user) {
         api.defaults.headers.Authorization = `Bearer ${user}`;
@@ -49,8 +46,6 @@ export const AuthProvider = ({ children }) => {
             photoURL: userCredential.user.photoURL,
           };
 
-          console.log(customTokenUser);
-
           if (
             response.status === 200 &&
             prevUser.uid === customTokenUser.uid &&
@@ -61,14 +56,12 @@ export const AuthProvider = ({ children }) => {
             setUser(null);
             setSigned(false);
             localStorage.removeItem("token");
-            // Cookies.remove("user");
             console.error("Usuário inválido");
           }
         } catch (error) {
           setUser(null);
           setSigned(false);
           localStorage.removeItem("token");
-          // Cookies.remove("user");
           console.error("Ocorreu um erro: " + error);
         }
       }
@@ -135,8 +128,6 @@ export const AuthProvider = ({ children }) => {
     const encryptedUser = encryptAndDecryptToken(JSON.stringify(user), false);
     api.defaults.headers.Authorization = `Bearer ${encryptedUser}`;
     localStorage.setItem("token", encryptedUser);
-
-    console.log(user);
 
     setUser(user);
     setSigned(true);
@@ -279,7 +270,6 @@ export const AuthProvider = ({ children }) => {
     try {
       await signOut(auth);
       localStorage.removeItem("token");
-      // Cookies.remove("user");
       setUser(null);
       setSigned(false);
       setLoading(false);
