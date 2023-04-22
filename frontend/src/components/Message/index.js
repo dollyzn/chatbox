@@ -43,20 +43,19 @@ const Message = ({ message, isUser }) => {
           </Box>
         </Box>
       </Box>
-      <Divider />
     </>
   );
 };
 
 const userContainerStyle = {
-  backgroundColor: "#f5f5f5",
+  backgroundColor: "#fff",
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
 };
 
 const botContainerStyle = {
-  backgroundColor: "#addbff",
+  backgroundColor: "#f5f5f5",
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
