@@ -111,11 +111,6 @@ export const AuthProvider = ({ children }) => {
     const cryptoKey = process.env.REACT_APP_CRYPTO_KEY;
 
     try {
-      const encryptedToken = CryptoJS.AES.encrypt(
-        JSON.stringify(token),
-        cryptoKey
-      ).toString();
-
       if (isEncrypt) {
         const decryptedToken = CryptoJS.AES.decrypt(token, cryptoKey).toString(
           CryptoJS.enc.Utf8
@@ -123,6 +118,11 @@ export const AuthProvider = ({ children }) => {
 
         return decryptedToken;
       } else {
+        const encryptedToken = CryptoJS.AES.encrypt(
+          token,
+          cryptoKey
+        ).toString();
+
         return encryptedToken;
       }
     } catch (error) {
@@ -135,6 +135,8 @@ export const AuthProvider = ({ children }) => {
     const encryptedUser = encryptAndDecryptToken(JSON.stringify(user), false);
     api.defaults.headers.Authorization = `Bearer ${encryptedUser}`;
     localStorage.setItem("token", encryptedUser);
+
+    console.log(user);
 
     setUser(user);
     setSigned(true);
