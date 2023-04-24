@@ -20,8 +20,8 @@ const TypingMessage = ({ message, typingSpeed, messageRef }) => {
 
   useLayoutEffect(() => {
     setIsAtLimit(
-      messageRef.current.scrollTop + messageRef.current.clientHeight ===
-        messageRef.current.scrollHeight
+      messageRef.current.scrollTop + messageRef.current.clientHeight >=
+        messageRef.current.scrollHeight - 60
     );
 
     const element = testRef.current;
