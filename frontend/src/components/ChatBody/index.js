@@ -67,7 +67,7 @@ function ChatBody() {
 
             try {
               const response = await api.post("/chatgpt", {
-                token: user.token,
+                context: JSON.stringify(chat),
                 queryText: input,
               });
 
@@ -107,7 +107,6 @@ function ChatBody() {
 
             try {
               const response = await api.post("/dialogflow", {
-                token: user.token,
                 languageCode: "pt-BR",
                 queryText: input,
                 sessionId: `${user?.uid}`,

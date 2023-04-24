@@ -16,14 +16,38 @@ const isAuth = require("../middleware/isAuth");
 const chatgptRouter = express.Router();
 
 chatgptRouter.post("/chatgpt", isAuth, async (req, res) => {
-  const { queryText } = req.body;
+  const { queryText, context } = req.body;
 
   try {
+    const chat = JSON.parse(context);
+
+    const messages = [
+      {
+        role: "system",
+        content:
+          "Você é um assistente virtual que se chama ChatBox e responde todas as mensagens em português",
+      },
+    ];
+
+    chat.forEach((message) => {
+      if (message.message !== undefined) {
+        messages.push({
+          role: message.isUser ? "user" : "assistant",
+          content: message.message,
+        });
+      }
+    });
+
+    messages.push({
+      role: "user",
+      content: queryText,
+    });
+
     const response = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
       max_tokens: 500,
       temperature: 0.5,
-      messages: [{ role: "user", content: queryText }],
+      messages: messages,
     });
 
     const message = response.data.choices[0].message;
