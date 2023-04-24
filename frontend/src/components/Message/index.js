@@ -3,7 +3,7 @@ import { Divider, Typography, Avatar, Box } from "@mui/joy";
 import useIsMobile from "../../hooks/isMobile";
 import { AuthContext } from "../../context/AuthContext";
 
-import botIcon from "../../assets/bot2.jpg";
+import botIcon from "../../assets/boticon.svg";
 
 const Message = ({ message, isUser }) => {
   const { user } = useContext(AuthContext);

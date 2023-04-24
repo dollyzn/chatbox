@@ -227,7 +227,12 @@ export const AuthProvider = ({ children }) => {
       );
 
       try {
-        await updateProfile(userCredential.user, { displayName: name });
+        const userAvatar = `https://api.dicebear.com/6.x/fun-emoji/svg?seed=${name}`;
+
+        await updateProfile(userCredential.user, {
+          displayName: name,
+          photoURL: userAvatar,
+        });
 
         const user = {
           uid: userCredential.user.uid,
