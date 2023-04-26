@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 import {
   Box,
@@ -8,33 +9,43 @@ import {
   Textarea,
   CircularProgress,
 } from "@mui/joy";
-import Message from "../Message";
-import useIsMobile from "../../hooks/isMobile";
-import { Send, South } from "@mui/icons-material";
-import loginIcon from "../../assets/toolbar.png";
-import TypingMessage from "../TypingMessageEffect";
+
 import api from "../../services/api";
-import { AuthContext } from "../../context/AuthContext";
+import useIsMobile from "../../hooks/isMobile";
+
+import Message from "../Message";
+import TypingMessage from "../TypingMessageEffect";
+
+import { Send, South } from "@mui/icons-material";
+import chatboxlogo from "../../assets/webp/toolbar.webp";
 
 function ChatBody() {
+  const typingSpeed = 30;
+  const isMobile = useIsMobile();
+  const messagesRef = useRef(null);
+
   const { user } = useContext(AuthContext);
   const { type } = useParams();
-  const messagesRef = useRef(null);
+
+  const [chat, setChat] = useState([{}]);
   const [input, setInput] = useState("");
   const [disabled, setDisabled] = useState(false);
-  const [chat, setChat] = useState([{}]);
-  const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [hideText, setHideText] = useState(true);
-
-  const typingSpeed = 30;
-
-  const isMobile = useIsMobile();
+  const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
 
   useEffect(() => {
     if (chat[chat.length - 1].isUser || isScrolledToBottom) {
       handleScroll();
     }
+    // eslint-disable-next-line
   }, [chat]);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e);
+    }
+  };
 
   const handleScroll = () => {
     if (messagesRef.current) {
@@ -183,13 +194,6 @@ function ChatBody() {
     }
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  };
-
   return (
     <Box
       sx={{
@@ -227,7 +231,7 @@ function ChatBody() {
             }}
           >
             <img
-              src={loginIcon}
+              src={chatboxlogo}
               width="250px"
               alt="Logo Icon"
               draggable="false"

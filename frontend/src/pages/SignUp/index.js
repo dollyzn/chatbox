@@ -24,7 +24,7 @@ import {
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import GoogleIcon from "@mui/icons-material/Google";
-import loginIcon from "../../assets/toolbar.png";
+import loginIcon from "../../assets/webp/toolbar.webp";
 
 const SignUp = () => {
   const { SignUp, GoogleSign, signed, loginLoading } = useContext(AuthContext);

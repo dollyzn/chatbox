@@ -4,7 +4,7 @@ import ChatBody from "../../components/ChatBody";
 function Chat() {
   return (
     <Box sx={{ height: "100%" }}>
-      <ChatBody></ChatBody>
+      <ChatBody />
     </Box>
   );
 }

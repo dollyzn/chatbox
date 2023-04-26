@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
-import PropTypes from "prop-types";
 import { Typography } from "@mui/joy";
+import PropTypes from "prop-types";
+
 import "../../App.css";
 
 const TypingMessage = ({ message, typingSpeed, messageRef }) => {
@@ -34,6 +35,7 @@ const TypingMessage = ({ message, typingSpeed, messageRef }) => {
     }
 
     setprevHeight(rect.height);
+    // eslint-disable-next-line
   }, [text]);
 
   return (
@@ -47,6 +49,7 @@ const TypingMessage = ({ message, typingSpeed, messageRef }) => {
 TypingMessage.propTypes = {
   message: PropTypes.string.isRequired,
   typingSpeed: PropTypes.number.isRequired,
+  messageRef: PropTypes.any.isRequired,
 };
 
 export default TypingMessage;

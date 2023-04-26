@@ -14,11 +14,12 @@ import {
 import CryptoJS from "crypto-js";
 
 import api from "../services/api";
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [signed, setSigned] = useState(false);
   const [user, setUser] = useState(null);
+  const [signed, setSigned] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loginLoading, setLoginLoading] = useState(false);
 
@@ -68,6 +69,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     };
     loadUserData();
+    // eslint-disable-next-line
   }, []);
 
   const refreshAuthToken = async () => {
@@ -132,17 +134,6 @@ export const AuthProvider = ({ children }) => {
     setUser(user);
     setSigned(true);
     setLoginLoading(false);
-
-    toast.success("Usuário autenticado com sucesso!", {
-      position: "top-right",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
   };
 
   const handleError = (error, emailRef, passwordRef, setFormError) => {
@@ -171,7 +162,7 @@ export const AuthProvider = ({ children }) => {
           autoClose: 2000,
           hideProgressBar: false,
           closeOnClick: true,
-          pauseOnHover: true,
+          pauseOnHover: false,
           draggable: true,
           progress: undefined,
           theme: "light",
@@ -278,16 +269,6 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
       setSigned(false);
       setLoading(false);
-      toast.warn("Usuário desconectado", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
     } catch (error) {
       handleError(error);
     }

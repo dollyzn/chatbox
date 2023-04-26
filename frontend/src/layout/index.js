@@ -18,15 +18,16 @@ import {
   ListItemDecorator,
 } from "@mui/joy";
 
+import useIsMobile from "../hooks/isMobile";
+
 import MainListItems from "./MainListItems";
 import BackdropLoading from "../components/BackdropLoading";
 
-import useIsMobile from "../hooks/isMobile";
-
-import LogoutIcon from "@mui/icons-material/Logout";
 import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import Icon from "../assets/toolbar.png";
+
+import Icon from "../assets/webp/toolbar.webp";
 
 const drawerWidth = 240;
 
@@ -71,31 +72,10 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
 
 function LoggedInLayout({ children }) {
   const { SignOut, user, loading } = useContext(AuthContext);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [open, setOpen] = useState(false);
-
   const isMobile = useIsMobile();
 
-  const openMenu = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleListKeyDown = (event) => {
-    if (event.key === "Tab") {
-      setAnchorEl(null);
-    } else if (event.key === "Escape") {
-      anchorEl?.focus();
-      setAnchorEl(null);
-    }
-  };
-
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false);
 
   function RenderLink(props) {
     const { to, src, width, alt } = props;
@@ -114,6 +94,27 @@ function LoggedInLayout({ children }) {
       </Link>
     );
   }
+
+  const handleListKeyDown = (event) => {
+    if (event.key === "Tab") {
+      setAnchorEl(null);
+    } else if (event.key === "Escape") {
+      anchorEl?.focus();
+      setAnchorEl(null);
+    }
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
 
   if (loading) {
     return <BackdropLoading />;
@@ -178,7 +179,7 @@ function LoggedInLayout({ children }) {
           <Popup
             role={undefined}
             id="composition-menu"
-            open={openMenu}
+            open={Boolean(anchorEl)}
             anchorEl={anchorEl}
             disablePortal
             modifiers={[

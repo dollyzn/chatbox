@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/joy";
+
 import "../../App.css";
 
 const phrases = [

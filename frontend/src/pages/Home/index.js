@@ -1,51 +1,24 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  Card,
-  AspectRatio,
-  IconButton,
-  SvgIcon,
-  Divider,
-  Badge,
-  Grid,
-  Container,
-  Button,
-} from "@mui/joy";
+import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 
-import { motion } from "framer-motion";
-
-import { AuthContext } from "../../context/AuthContext";
+import { Box, Typography, Grid, Container, Button } from "@mui/joy";
 
 import useIsMobile from "../../hooks/isMobile";
 import TypeEffect from "../../components/TypingHomeEffect";
 
-import { ReactComponent as IconGPT } from "../../assets/gpt.svg";
-import { ReactComponent as IconDialogFlow } from "../../assets/dialogflow.svg";
-import dash from "../../assets/dash.png";
-import people from "../../assets/people.png";
-import nodelogo from "../../assets/node-js.svg";
-import reactlogo from "../../assets/react.svg";
-import dialogflowlogo from "../../assets/dialogflowlogo.svg";
-import openailogo from "../../assets/openai.png";
-import oraclelogo from "../../assets/oracle.svg";
-import firebaselogo from "../../assets/firebase.png";
-import nginxlogo from "../../assets/nginx.svg";
-import pm2logo from "../../assets/pm2.svg";
-import { useContext } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import people from "../../assets/webp/people.webp";
+import nodelogo from "../../assets/svg/node-js.svg";
+import reactlogo from "../../assets/svg/react.svg";
+import chatboxlogo from "../../assets/webp/logo.webp";
+import dialogflowlogo from "../../assets/svg/dialogflowlogo.svg";
+import firebaselogo from "../../assets/webp/firebase.webp";
+import openailogo from "../../assets/webp/openai.webp";
+import oraclelogo from "../../assets/svg/oracle.svg";
+import nginxlogo from "../../assets/svg/nginx.svg";
+import pm2logo from "../../assets/svg/pm2.svg";
 
 function Home() {
-  const { user } = useContext(AuthContext);
-  const [showCard, setShowCard] = useState(false);
   const isMobile = useIsMobile();
-
-  const cardVariants = {
-    visible: { opacity: 1, x: 0 },
-    hidden: { opacity: 0, x: 30 },
-  };
-
-  const firstName = user?.name.split(" ")[0];
 
   function RenderLink(props) {
     const { to, variant, size, text, styles } = props;
@@ -95,7 +68,8 @@ function Home() {
             }}
           >
             <img
-              src={dash}
+              alt="Chatbox logo"
+              src={chatboxlogo}
               width={150}
               style={{ display: isMobile ? "none" : "block" }}
             />
@@ -120,6 +94,7 @@ function Home() {
           sx={{ order: { md: 1 }, textAlign: "center" }}
         >
           <img
+            alt="People chating ilustration"
             src={people}
             style={{
               borderRadius: 50,
@@ -140,28 +115,28 @@ function Home() {
         sx={{ flexGrow: 1, mt: { xs: 10, sm: 0 } }}
       >
         <Grid item xs={5} sm={3} md={1}>
-          <img src={nodelogo} width={100} />
+          <img alt="Node logo" src={nodelogo} width={100} />
         </Grid>
         <Grid item xs={5} sm={3} md={1}>
-          <img src={reactlogo} width={70} />
+          <img alt="React logo" src={reactlogo} width={70} />
         </Grid>
         <Grid item xs={5} sm={3} md={1}>
-          <img src={pm2logo} width={100} />
+          <img alt="PM2 logo" src={pm2logo} width={100} />
         </Grid>
         <Grid item xs={5} sm={3} md={1}>
-          <img src={openailogo} width={100} />
+          <img alt="Openai logo" src={openailogo} width={100} />
         </Grid>
         <Grid item xs={5} sm={3} md={1}>
-          <img src={dialogflowlogo} width={100} />
+          <img alt="Dialogflow logo" src={dialogflowlogo} width={100} />
         </Grid>
         <Grid item xs={5} sm={3} md={1}>
-          <img src={firebaselogo} width={100} />
+          <img alt="Firebase logo" src={firebaselogo} width={100} />
         </Grid>
         <Grid item xs={5} sm={3} md={1}>
-          <img src={oraclelogo} width={100} />
+          <img alt="Oracle logo" src={oraclelogo} width={100} />
         </Grid>
         <Grid item xs={5} sm={3} md={1}>
-          <img src={nginxlogo} width={70} />
+          <img alt="Nginx logo" src={nginxlogo} width={70} />
         </Grid>
       </Grid>
     </Container>

@@ -1,15 +1,16 @@
 import * as React from "react";
+import { Link as RouterLink } from "react-router-dom";
+import { SvgIcon } from "@mui/material";
 import {
   ListItemContent,
   ListItemDecorator,
   ListItemButton,
   ListItem,
 } from "@mui/joy";
-import { SvgIcon } from "@mui/material";
+
 import HomeIcon from "@mui/icons-material/Home";
-import { ReactComponent as IconGPT } from "../assets/gpt.svg";
-import { ReactComponent as IconDialogFlow } from "../assets/dialogflow.svg";
-import { Link as RouterLink } from "react-router-dom";
+import { ReactComponent as IconGPT } from "../assets/svg/gpt.svg";
+import { ReactComponent as IconDialogFlow } from "../assets/svg/dialogflow.svg";
 
 function ListItemLink(props) {
   const { icon, primary, to, className } = props;

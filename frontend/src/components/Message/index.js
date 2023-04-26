@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
-import { Divider, Typography, Avatar, Box } from "@mui/joy";
-import useIsMobile from "../../hooks/isMobile";
 import { AuthContext } from "../../context/AuthContext";
+import { Typography, Avatar, Box } from "@mui/joy";
 
-import botIcon from "../../assets/boticon.svg";
+import useIsMobile from "../../hooks/isMobile";
+
+import botIcon from "../../assets/svg/boticon.svg";
 
 const Message = ({ message, isUser }) => {
   const { user } = useContext(AuthContext);
