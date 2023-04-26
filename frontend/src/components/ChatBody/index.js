@@ -24,6 +24,7 @@ function ChatBody() {
   const [disabled, setDisabled] = useState(false);
   const [chat, setChat] = useState([{}]);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+  const [hideText, setHideText] = useState(true);
 
   const typingSpeed = 30;
 
@@ -53,6 +54,10 @@ function ChatBody() {
     }
   };
 
+  const delay = (time) => {
+    return new Promise((resolve) => setTimeout(() => resolve(), time));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!disabled) {
@@ -74,6 +79,7 @@ function ChatBody() {
               message = response.data.data.content;
             } catch (error) {
               console.error(error);
+              await delay(2000);
               message =
                 "Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.";
             }
@@ -115,6 +121,7 @@ function ChatBody() {
               message = response.data.data.response;
             } catch (error) {
               console.error(error);
+              await delay(2000);
               message =
                 "Desculpe, ocorreu um erro ao processar sua solicitação. Por favor, tente novamente mais tarde.";
             }
@@ -205,7 +212,6 @@ function ChatBody() {
           scrollbarWidth: "thin",
           scrollbarColor: "#ccc transparent",
           scrollBehavior: "smooth",
-          pb: 5,
         }}
         ref={messagesRef}
         onScroll={checkIsScrolledToBottom}
@@ -285,7 +291,17 @@ function ChatBody() {
             sx={{ mx: "auto", maxWidth: "1000px" }}
           />
         </form>
-        <Typography level="body3" textAlign="center" sx={{ my: 1 }}>
+        <Typography
+          level="body3"
+          textAlign="center"
+          onClick={(e) => setHideText(!hideText)}
+          sx={{
+            my: 1,
+            overflow: "hidden",
+            whiteSpace: hideText ? "nowrap" : "normal",
+            textOverflow: "ellipsis",
+          }}
+        >
           ChatBox is a project developed for educational purposes that aims to
           showcase how to create a chat application using modern web
           technologies.
