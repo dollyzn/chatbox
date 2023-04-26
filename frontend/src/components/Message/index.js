@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Typography, Avatar, Box } from "@mui/joy";
 
+import PropTypes from "prop-types";
+
 import useIsMobile from "../../hooks/isMobile";
 
 import botIcon from "../../assets/svg/boticon.svg";
@@ -76,6 +78,11 @@ const userMessageStyle = {
 
 const botMessageStyle = {
   maxWidth: "700px",
+};
+
+Message.propTypes = {
+  message: PropTypes.string.isRequired,
+  isUser: PropTypes.bool.isRequired,
 };
 
 export default Message;
