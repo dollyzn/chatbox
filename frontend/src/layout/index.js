@@ -151,13 +151,14 @@ function LoggedInLayout({ children }) {
           <Box sx={{ flexGrow: 1 }} />
           <Button
             id="composition-button"
+            variant="outlined"
             aria-controls={open ? "composition-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
             startDecorator={
               <Avatar
-                variant="plain"
+                variant="outlined"
                 size="sm"
                 alt="Avatar"
                 color="soft"
