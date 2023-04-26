@@ -25,7 +25,7 @@ chatgptRouter.post("/chatgpt", isAuth, async (req, res) => {
       {
         role: "system",
         content:
-          "Você é um assistente virtual que se chama ChatBox e responde todas as mensagens em português",
+          "Você é um assistente virtual que se chama ChatBox e responde todas as mensagens em português e foi desenvolvido por Natã",
       },
     ];
 
