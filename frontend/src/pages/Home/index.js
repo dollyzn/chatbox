@@ -139,28 +139,28 @@ function Home() {
         alignItems="center"
         sx={{ flexGrow: 1, mt: { xs: 10, sm: 0 } }}
       >
-        <Grid item xs={5} sm={1}>
+        <Grid item xs={5} sm={3} md={1}>
           <img src={nodelogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={1}>
+        <Grid item xs={5} sm={3} md={1}>
           <img src={reactlogo} width={70} />
         </Grid>
-        <Grid item xs={5} sm={1}>
+        <Grid item xs={5} sm={3} md={1}>
           <img src={pm2logo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={1}>
+        <Grid item xs={5} sm={3} md={1}>
           <img src={openailogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={1}>
+        <Grid item xs={5} sm={3} md={1}>
           <img src={dialogflowlogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={1}>
+        <Grid item xs={5} sm={3} md={1}>
           <img src={firebaselogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={1}>
+        <Grid item xs={5} sm={3} md={1}>
           <img src={oraclelogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={1}>
+        <Grid item xs={5} sm={3} md={1}>
           <img src={nginxlogo} width={70} />
         </Grid>
       </Grid>

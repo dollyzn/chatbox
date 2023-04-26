@@ -44,7 +44,7 @@ const TypeEffect = () => {
   return (
     <Typography level="h5" sx={{ mt: 5, color: "#6a6a81" }}>
       {
-        "A Inteligência Artificial pode ser utilizada para aprimorar e tornar mais naturais as conversas informais entre pessoas e assistentes virtuais. "
+        "A Inteligência Artificial pode ser utilizada para aprimorar e tornar mais natural as conversas entre pessoas e assistentes virtuais. "
       }
       {text}
       <span className="HomeCursor" />
