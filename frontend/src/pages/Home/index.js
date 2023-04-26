@@ -9,6 +9,8 @@ import {
   Divider,
   Badge,
   Grid,
+  Container,
+  Button,
 } from "@mui/joy";
 
 import { motion } from "framer-motion";
@@ -20,7 +22,16 @@ import TypeEffect from "../../components/TypingHomeEffect";
 
 import { ReactComponent as IconGPT } from "../../assets/gpt.svg";
 import { ReactComponent as IconDialogFlow } from "../../assets/dialogflow.svg";
-import Ia from "../../assets/dash.png";
+import dash from "../../assets/dash.png";
+import people from "../../assets/people.png";
+import nodelogo from "../../assets/node-js.svg";
+import reactlogo from "../../assets/react.svg";
+import dialogflowlogo from "../../assets/dialogflowlogo.svg";
+import openailogo from "../../assets/openai.png";
+import oraclelogo from "../../assets/oracle.svg";
+import firebaselogo from "../../assets/firebase.png";
+import nginxlogo from "../../assets/nginx.svg";
+import pm2logo from "../../assets/pm2.svg";
 import { useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -37,7 +48,7 @@ function Home() {
   const firstName = user?.name.split(" ")[0];
 
   function RenderLink(props) {
-    const { to, variant, size, icon } = props;
+    const { to, variant, size, text, styles } = props;
 
     const renderLink = React.useMemo(
       () =>
@@ -48,159 +59,112 @@ function Home() {
     );
 
     return (
-      <IconButton component={renderLink} variant={variant} size={size}>
-        {icon}
-      </IconButton>
+      <Button component={renderLink} variant={variant} size={size} sx={styles}>
+        {text}
+      </Button>
     );
   }
 
   return (
-    <Box sx={{ mt: 4, mx: 4 }}>
-      <Grid container sx={{ flexGrow: 1 }}>
-        <Grid xs={12} md={6}>
-          <Card
-            variant="outlined"
+    <Container sx={{ mt: 10 }}>
+      <Grid
+        container
+        sx={{
+          flexGrow: 1,
+          display: "flex",
+          alignItems: "center",
+          flexDirection: { xs: "column", md: "row" },
+          mx: "auto",
+        }}
+      >
+        <Grid
+          lg={6}
+          md={6}
+          sm={12}
+          sx={{
+            order: { xs: 2, sm: 1 },
+            textAlign: { xs: "center", md: "start" },
+          }}
+        >
+          <Box
             sx={{
-              zIndex: 1,
-
-              mt: 5,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: { xs: "center", md: "start" },
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography level="h1" sx={{ mr: 5 }}>
-                {isMobile ? "Olá!" : `Olá! ${firstName}.`}
+            <img
+              src={dash}
+              width={150}
+              style={{ display: isMobile ? "none" : "block" }}
+            />
+            <Typography level="display1">ChatBox</Typography>
+          </Box>
+          <TypeEffect />
+          <RenderLink
+            to="/chat/chatgpt"
+            variant="solid"
+            text={
+              <Typography level="h5" sx={{ color: "#fff", p: 1 }}>
+                Teste agora!
               </Typography>
-              <div style={{ display: "flex", gap: 15 }}>
-                <Badge badgeContent="!">
-                  <RenderLink
-                    variant="outlined"
-                    to="/chat/chatgpt"
-                    icon={
-                      <SvgIcon component={IconGPT} inheritViewBox></SvgIcon>
-                    }
-                    size="lg"
-                    fullWidth
-                  ></RenderLink>
-                </Badge>
-                <Badge badgeContent="!">
-                  <RenderLink
-                    variant="outlined"
-                    to="/chat/dialogflow"
-                    icon={
-                      <SvgIcon
-                        component={IconDialogFlow}
-                        inheritViewBox
-                      ></SvgIcon>
-                    }
-                    size="lg"
-                    fullWidth
-                  ></RenderLink>
-                </Badge>
-              </div>
-            </Box>
-            <Divider sx={{ mt: 2, mb: 3 }} />
-            <TypeEffect />
-          </Card>
+            }
+            styles={{ mt: 10, px: 5 }}
+          />
         </Grid>
         <Grid
-          xs={6}
-          sx={{
-            backgroundImage: `url(${Ia})`,
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-          }}
-        ></Grid>
-        {/* {!isMobile && (
-          <motion.div
-            initial="hidden"
-            animate={showCard ? "hidden" : "visible"}
-            variants={cardVariants}
-            transition={{ duration: 0.3 }}
+          lg={6}
+          md={6}
+          sm={12}
+          sx={{ order: { md: 1 }, textAlign: "center" }}
+        >
+          <img
+            src={people}
             style={{
-              position: "absolute",
-              bottom: 20,
-              right: 30,
-              width: "300px",
+              borderRadius: 50,
+              width: "100%",
+              maxWidth: "600px",
             }}
-          >
-            <Card
-              variant="outlined"
-              orientation="horizontal"
-              sx={{
-                gap: 2,
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
-                },
-                mb: 1,
-              }}
-              onClick={() => setShowCard(!showCard)}
-            >
-              <AspectRatio ratio="1" sx={{ width: 45 }}>
-                <img
-                  src="https://avatars.githubusercontent.com/u/66445721?v=4"
-                  srcSet="https://avatars.githubusercontent.com/u/66445721?v=4"
-                  loading="lazy"
-                  alt=""
-                />
-              </AspectRatio>
-              <div>
-                <Typography
-                  level="h2"
-                  fontSize="lg"
-                  id="card-description"
-                  mb={0.5}
-                >
-                  Natã Santos
-                </Typography>
-                <Typography fontSize="sm" aria-describedby="card-description">
-                  Técnico Informática - IFF
-                </Typography>
-              </div>
-            </Card>
-            <Card
-              variant="outlined"
-              orientation="horizontal"
-              sx={{
-                gap: 2,
-                "&:hover": {
-                  boxShadow: "md",
-                  borderColor: "neutral.outlinedHoverBorder",
-                },
-              }}
-            >
-              <AspectRatio ratio="1" sx={{ width: 45 }}>
-                <img
-                  src="https://avatars.githubusercontent.com/u/66445721?v=4"
-                  srcSet="https://avatars.githubusercontent.com/u/66445721?v=4"
-                  loading="lazy"
-                  alt=""
-                />
-              </AspectRatio>
-              <div>
-                <Typography
-                  level="h2"
-                  fontSize="lg"
-                  id="card-description"
-                  mb={0.5}
-                >
-                  Gabrielly Chaim
-                </Typography>
-                <Typography fontSize="sm" aria-describedby="card-description">
-                  Técnico Informática - IFF
-                </Typography>
-              </div>
-            </Card>
-          </motion.div>
-        )} */}
+          />
+        </Grid>
       </Grid>
-    </Box>
+      <Typography level="h6" sx={{ textAlign: "center", mt: 12 }}>
+        Este projeto só foi possível graças a essas empresas e tecnologias.
+      </Typography>
+      <Grid
+        container
+        spacing={5}
+        justifyContent="space-evenly"
+        alignItems="center"
+        sx={{ flexGrow: 1, mt: { xs: 10, sm: 0 } }}
+      >
+        <Grid item xs={5} sm={1}>
+          <img src={nodelogo} width={100} />
+        </Grid>
+        <Grid item xs={5} sm={1}>
+          <img src={reactlogo} width={70} />
+        </Grid>
+        <Grid item xs={5} sm={1}>
+          <img src={pm2logo} width={100} />
+        </Grid>
+        <Grid item xs={5} sm={1}>
+          <img src={openailogo} width={100} />
+        </Grid>
+        <Grid item xs={5} sm={1}>
+          <img src={dialogflowlogo} width={100} />
+        </Grid>
+        <Grid item xs={5} sm={1}>
+          <img src={firebaselogo} width={100} />
+        </Grid>
+        <Grid item xs={5} sm={1}>
+          <img src={oraclelogo} width={100} />
+        </Grid>
+        <Grid item xs={5} sm={1}>
+          <img src={nginxlogo} width={70} />
+        </Grid>
+      </Grid>
+    </Container>
   );
 }
 
