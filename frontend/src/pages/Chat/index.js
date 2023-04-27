@@ -40,6 +40,15 @@ function Chat() {
     // eslint-disable-next-line
   }, [chat]);
 
+  const handleInput = (e) => {
+    const maxChars = 10000;
+    const text = e.target.value;
+    setInput(text);
+    if (text.length > maxChars) {
+      setInput(text.slice(0, maxChars));
+    }
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -112,7 +121,7 @@ function Chat() {
             setTimeout(() => {
               setChat([...newChat, botMessage]);
               setDisabled(false);
-            }, botMessage.message.length * (typingSpeed + 2));
+            }, botMessage.message.length * (typingSpeed + 3));
           }
           break;
         case "dialogflow":
@@ -157,7 +166,7 @@ function Chat() {
             setTimeout(() => {
               setChat([...newChat, botMessage]);
               setDisabled(false);
-            }, botMessage.message.length * (typingSpeed + 2));
+            }, botMessage.message.length * (typingSpeed + 3));
           }
           break;
         default:
@@ -188,7 +197,7 @@ function Chat() {
             setTimeout(() => {
               setChat([...newChat, botMessage]);
               setDisabled(false);
-            }, botMessage.message.length * (typingSpeed + 2));
+            }, botMessage.message.length * (typingSpeed + 3));
           }
       }
     }
@@ -276,7 +285,9 @@ function Chat() {
             placeholder="Digite sua mensagem"
             size="lg"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              handleInput(e);
+            }}
             onKeyDown={(e) => handleKeyDown(e)}
             endDecorator={
               <IconButton
