@@ -112,7 +112,7 @@ function ChatBody() {
             setTimeout(() => {
               setChat([...newChat, botMessage]);
               setDisabled(false);
-            }, botMessage.message.length * typingSpeed + 200);
+            }, botMessage.message.length * (typingSpeed + 2));
           }
           break;
         case "dialogflow":
@@ -157,7 +157,7 @@ function ChatBody() {
             setTimeout(() => {
               setChat([...newChat, botMessage]);
               setDisabled(false);
-            }, botMessage.message.length * typingSpeed + 200);
+            }, botMessage.message.length * (typingSpeed + 2));
           }
           break;
         default:
@@ -188,7 +188,7 @@ function ChatBody() {
             setTimeout(() => {
               setChat([...newChat, botMessage]);
               setDisabled(false);
-            }, botMessage.message.length * typingSpeed + 200);
+            }, botMessage.message.length * (typingSpeed + 2));
           }
       }
     }
