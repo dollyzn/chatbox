@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link as RouterLink } from "react-router-dom";
 import { Toolbar, Drawer, styled, AppBar as MuiAppBar } from "@mui/material";
-import { PopperUnstyled, ClickAwayListener } from "@mui/base";
+import { Popper, ClickAwayListener } from "@mui/base";
 import {
   CssBaseline,
   Box,
@@ -49,7 +49,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Popup = styled(PopperUnstyled)({
+const Popup = styled(Popper)({
   zIndex: 1000,
 });
 
