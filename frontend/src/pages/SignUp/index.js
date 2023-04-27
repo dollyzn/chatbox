@@ -177,7 +177,7 @@ const SignUp = () => {
               </Box>
               <Box component="form" noValidate onSubmit={handleSubmit}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12}>
+                  <Grid xs={12}>
                     <FormControl>
                       <FormLabel
                         sx={{ color: formError.name ? "#d3232f" : "" }}
@@ -199,7 +199,7 @@ const SignUp = () => {
                       </FormHelperText>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid xs={12}>
                     <FormControl>
                       <FormLabel
                         sx={{ color: formError.email ? "#d3232f" : "" }}
@@ -221,7 +221,7 @@ const SignUp = () => {
                       </FormHelperText>
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12}>
+                  <Grid xs={12}>
                     <FormControl>
                       <FormLabel
                         sx={{ color: formError.password ? "#d3232f" : "" }}
@@ -273,7 +273,7 @@ const SignUp = () => {
                   Entrar com o Google
                 </Button>
                 <Grid container>
-                  <Grid item xs>
+                  <Grid xs>
                     <RenderLink
                       to="/login"
                       level="body2"

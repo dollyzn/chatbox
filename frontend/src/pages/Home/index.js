@@ -112,30 +112,30 @@ function Home() {
         spacing={5}
         justifyContent="space-evenly"
         alignItems="center"
-        sx={{ flexGrow: 1, mt: { xs: 10, sm: 0 } }}
+        sx={{ flexGrow: 1, mt: { xs: 10, sm: 0 }, textAlign: "center" }}
       >
-        <Grid item xs={5} sm={3} md={1}>
+        <Grid xs={5} sm={3} md={1}>
           <img alt="Node logo" src={nodelogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={3} md={1}>
+        <Grid xs={5} sm={3} md={1}>
           <img alt="React logo" src={reactlogo} width={70} />
         </Grid>
-        <Grid item xs={5} sm={3} md={1}>
+        <Grid xs={5} sm={3} md={1}>
           <img alt="PM2 logo" src={pm2logo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={3} md={1}>
+        <Grid xs={5} sm={3} md={1}>
           <img alt="Openai logo" src={openailogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={3} md={1}>
+        <Grid xs={5} sm={3} md={1}>
           <img alt="Dialogflow logo" src={dialogflowlogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={3} md={1}>
+        <Grid xs={5} sm={3} md={1}>
           <img alt="Firebase logo" src={firebaselogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={3} md={1}>
+        <Grid xs={5} sm={3} md={1}>
           <img alt="Oracle logo" src={oraclelogo} width={100} />
         </Grid>
-        <Grid item xs={5} sm={3} md={1}>
+        <Grid xs={5} sm={3} md={1}>
           <img alt="Nginx logo" src={nginxlogo} width={70} />
         </Grid>
       </Grid>
