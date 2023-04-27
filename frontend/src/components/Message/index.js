@@ -81,8 +81,8 @@ const botMessageStyle = {
 };
 
 Message.propTypes = {
-  message: PropTypes.string.isRequired,
-  isUser: PropTypes.bool.isRequired,
+  message: PropTypes.any.isRequired,
+  isUser: PropTypes.any.isRequired,
 };
 
 export default Message;
