@@ -81,7 +81,7 @@ function Home() {
             variant="solid"
             text={
               <Typography level="h5" sx={{ color: "#fff", p: 1 }}>
-                Teste agora!
+                Iniciar conversa
               </Typography>
             }
             styles={{ mt: 10, px: 5 }}
